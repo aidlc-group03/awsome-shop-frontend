@@ -2,7 +2,7 @@
   "id": "FEAT-005",
   "type": "feat",
   "description": "Step 8: Employee Pages - Refactor Login and ShopHome, create ProductDetail, Redemption, RedemptionSuccess, Orders, OrderDetail, PointsCenter. All pages use services, common components, and follow business rules.",
-  "status": "pending",
+  "status": "in_progress",
   "steps": [
     "Refactor `src/pages/Login/index.tsx`: Remove the info Alert hint about mock accounts (or keep it conditional on VITE_USE_MOCK). The login already calls useAuthStore.login which now calls authService. Ensure it works with the refactored auth store. Keep existing UI layout unchanged.",
     "Refactor `src/pages/ShopHome/index.tsx`: Remove hardcoded PRODUCTS and CATEGORIES arrays. Use productService.getList() and categoryService.getPublicList() with useEffect/useState. Use the new ProductCard component for rendering. Keep the hero banner. Add category filtering via state. Add pagination support. Navigate to /product/:id on card click. Show loading states. Per BR-F2.",
