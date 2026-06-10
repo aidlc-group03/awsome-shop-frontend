@@ -151,6 +151,59 @@ setLanguage(lang)           // 设置语言
 
 两个 Store 均通过 `zustand/middleware/persist` 持久化到 localStorage。
 
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server (with mock data by default)
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build locally
+npm run preview
+```
+
+## Docker
+
+### Using docker-compose (recommended)
+
+```bash
+# Build and start the container
+docker-compose up --build
+
+# Run in detached mode
+docker-compose up --build -d
+
+# Stop the container
+docker-compose down
+```
+
+### Using Docker directly
+
+```bash
+# Build the image
+docker build -t awsome-shop-frontend .
+
+# Run the container
+docker run -p 8080:80 awsome-shop-frontend
+
+# Build with real API mode
+docker build --build-arg VITE_USE_MOCK=false -t awsome-shop-frontend .
+```
+
+The application will be available at `http://localhost:8080`.
+
+## Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `VITE_USE_MOCK` | `true` | Enable mock data mode (`true`) or connect to real API (`false`) |
+| `VITE_API_BASE_URL` | `/api` | Base URL for backend API requests (used when `VITE_USE_MOCK=false`) |
+
 ## 后续开发
 
 - [ ] 接入后端 API，替换 Mock 数据
