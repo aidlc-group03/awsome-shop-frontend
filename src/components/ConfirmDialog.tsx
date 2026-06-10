@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -24,10 +25,14 @@ export default function ConfirmDialog({
   onConfirm,
   title,
   content,
-  confirmText = '确认',
-  cancelText = '取消',
+  confirmText,
+  cancelText,
   loading = false,
 }: ConfirmDialogProps) {
+  const { t } = useTranslation();
+  const resolvedConfirmText = confirmText ?? t('common.confirm');
+  const resolvedCancelText = cancelText ?? t('common.cancel');
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle sx={{ fontWeight: 600 }}>{title}</DialogTitle>
@@ -40,7 +45,7 @@ export default function ConfirmDialog({
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 2 }}>
         <Button onClick={onClose} color="inherit" disabled={loading}>
-          {cancelText}
+          {resolvedCancelText}
         </Button>
         <Button
           onClick={onConfirm}
@@ -49,7 +54,7 @@ export default function ConfirmDialog({
           disabled={loading}
           startIcon={loading ? <CircularProgress size={16} color="inherit" /> : undefined}
         >
-          {confirmText}
+          {resolvedConfirmText}
         </Button>
       </DialogActions>
     </Dialog>

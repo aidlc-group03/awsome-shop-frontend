@@ -234,7 +234,7 @@ export default function PointsCenter() {
                     </Box>
                   </Box>
                   <Typography sx={{ fontSize: 16, fontWeight: 700, color }}>
-                    {prefix}{tx.points.toLocaleString()}
+                    {prefix}{Math.abs(tx.points).toLocaleString()}
                   </Typography>
                 </Paper>
               );

@@ -11,7 +11,10 @@
     "description": "Project skeleton is ready. Start building your e-commerce app."
   },
   "common": {
-    "back": "Back"
+    "back": "Back",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "noData": "No data"
   },
   "login": {
     "brand": "AWSome Shop",
@@ -43,7 +46,9 @@
     "heroBrowse": "Browse Now",
     "sold": "Redeemed",
     "soldUnit": "",
-    "redeem": "Redeem"
+    "redeem": "Redeem",
+    "allCategories": "All",
+    "noProducts": "No products found"
   },
   "product": {
     "notFound": "Product not found",

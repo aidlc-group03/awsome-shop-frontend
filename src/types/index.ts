@@ -88,6 +88,7 @@ export interface ListProductParams {
   size: number;
   name?: string;
   category?: string;
+  status?: number;
 }
 
 export interface Category {

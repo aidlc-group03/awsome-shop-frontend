@@ -82,7 +82,7 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
                 borderRadius: 1,
               }}
             >
-              已售罄
+              {t('product.soldOut')}
             </Typography>
           </Box>
         )}

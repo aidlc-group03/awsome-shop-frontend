@@ -32,12 +32,12 @@ export default function ShopHome() {
       const params = {
         page,
         size: pageSize,
+        status: 1,
         ...(activeCategory ? { category: activeCategory } : {}),
       };
       const result = await productService.getList(params);
-      // BR-F2.1: Only show status=1 products
-      const activeProducts = result.records.filter((p) => p.status === 1);
-      setProducts(activeProducts);
+      // BR-F2.1: Server-side filtering by status=1
+      setProducts(result.records);
       setTotalPages(result.pages);
     } catch {
       setProducts([]);

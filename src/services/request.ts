@@ -20,7 +20,7 @@ request.interceptors.response.use(
   (response) => {
     const res = response.data;
     // Unwrap ApiResult<T>: return data on success
-    if (res && typeof res === 'object' && 'code' in res) {
+    if (res && typeof res === 'object' && 'code' in res && 'data' in res) {
       if (res.code === 0 || res.code === 200) {
         return res.data;
       }
@@ -36,6 +36,7 @@ request.interceptors.response.use(
     const status = error.response?.status;
     if (status === 401) {
       localStorage.removeItem('token');
+      localStorage.removeItem('auth-storage');
       window.location.href = '/login';
     }
     return Promise.reject(error);

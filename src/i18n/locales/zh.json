@@ -11,7 +11,10 @@
     "description": "项目骨架已就绪，开始构建你的电商应用吧。"
   },
   "common": {
-    "back": "返回"
+    "back": "返回",
+    "confirm": "确认",
+    "cancel": "取消",
+    "noData": "暂无数据"
   },
   "login": {
     "brand": "AWSome Shop",
@@ -43,7 +46,9 @@
     "heroBrowse": "立即浏览",
     "sold": "已兑换",
     "soldUnit": "件",
-    "redeem": "兑换"
+    "redeem": "兑换",
+    "allCategories": "全部分类",
+    "noProducts": "暂无商品"
   },
   "product": {
     "notFound": "商品不存在",

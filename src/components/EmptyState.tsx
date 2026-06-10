@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import InboxIcon from '@mui/icons-material/Inbox';
@@ -9,9 +10,12 @@ interface EmptyStateProps {
 }
 
 export default function EmptyState({
-  message = '暂无数据',
+  message,
   icon,
 }: EmptyStateProps) {
+  const { t } = useTranslation();
+  const resolvedMessage = message ?? t('common.noData');
+
   return (
     <Box
       sx={{
@@ -25,7 +29,7 @@ export default function EmptyState({
     >
       {icon || <InboxIcon sx={{ fontSize: 64, color: '#CBD5E1' }} />}
       <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>
-        {message}
+        {resolvedMessage}
       </Typography>
     </Box>
   );

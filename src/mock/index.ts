@@ -124,6 +124,9 @@ export async function mockGetUserList(params: ListUserParams): Promise<PageResul
 export async function mockGetProductList(params: ListProductParams): Promise<PageResult<Product>> {
   await mockDelay();
   let filtered = [...products];
+  if (params.status !== undefined) {
+    filtered = filtered.filter((p) => p.status === params.status);
+  }
   if (params.name) {
     const kw = params.name.toLowerCase();
     filtered = filtered.filter((p) => p.name.toLowerCase().includes(kw));
