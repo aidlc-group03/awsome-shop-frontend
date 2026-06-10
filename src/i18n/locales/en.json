@@ -86,5 +86,193 @@
     "title": "404",
     "message": "Sorry, the page you visited does not exist.",
     "backHome": "Back to Home"
+  },
+  "adminProducts": {
+    "title": "Product Management",
+    "create": "Create Product",
+    "searchPlaceholder": "Search by product name...",
+    "categoryFilter": "Category",
+    "allCategories": "All Categories",
+    "search": "Search",
+    "empty": "No products found",
+    "batchActivate": "Batch Activate",
+    "batchDeactivate": "Batch Deactivate",
+    "col": {
+      "name": "Name",
+      "sku": "SKU",
+      "category": "Category",
+      "pointsPrice": "Points Price",
+      "stock": "Stock",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "edit": "Edit",
+    "delete": "Delete",
+    "editTitle": "Edit Product",
+    "createTitle": "Create Product",
+    "form": {
+      "name": "Product Name",
+      "nameHelp": "2-200 characters",
+      "sku": "SKU",
+      "category": "Category",
+      "pointsPrice": "Points Price",
+      "marketPrice": "Market Price",
+      "stock": "Stock",
+      "status": "Status",
+      "description": "Description",
+      "imageUrl": "Image URL"
+    },
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "deleteTitle": "Delete Product",
+    "deleteContent": "Are you sure you want to delete this product? This action cannot be undone.",
+    "statusTitle": "Update Status",
+    "activateContent": "Are you sure you want to activate this product?",
+    "deactivateContent": "Are you sure you want to deactivate this product?",
+    "batchTitle": "Batch Update Status",
+    "batchActivateContent": "Are you sure you want to activate the selected products?",
+    "batchDeactivateContent": "Are you sure you want to deactivate the selected products?",
+    "submitError": "Operation failed, please try again",
+    "validation": {
+      "name": "Product name is required (2-200 characters)",
+      "sku": "SKU is required",
+      "category": "Category is required",
+      "pointsPrice": "Points price must be a positive integer",
+      "stock": "Stock must be a non-negative integer"
+    }
+  },
+  "adminCategories": {
+    "title": "Category Management",
+    "create": "Create Category",
+    "empty": "No categories found",
+    "col": {
+      "name": "Name",
+      "iconUrl": "Icon URL",
+      "sortOrder": "Sort Order",
+      "actions": "Actions"
+    },
+    "edit": "Edit",
+    "delete": "Delete",
+    "editTitle": "Edit Category",
+    "createTitle": "Create Category",
+    "form": {
+      "name": "Category Name",
+      "iconUrl": "Icon URL",
+      "sortOrder": "Sort Order"
+    },
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "deleteTitle": "Delete Category",
+    "deleteContent": "Are you sure you want to delete this category? This action cannot be undone.",
+    "submitError": "Operation failed, please try again",
+    "validation": {
+      "name": "Category name is required"
+    }
+  },
+  "adminOrders": {
+    "title": "Order Management",
+    "searchPlaceholder": "Search by keyword...",
+    "search": "Search",
+    "empty": "No orders found",
+    "filterAll": "All",
+    "filterPending": "Pending",
+    "filterConfirmed": "Confirmed",
+    "filterShipping": "Shipping",
+    "filterCompleted": "Completed",
+    "filterCancelled": "Cancelled",
+    "col": {
+      "orderNo": "Order No",
+      "productName": "Product",
+      "points": "Points",
+      "status": "Status",
+      "createdAt": "Created At",
+      "actions": "Actions"
+    },
+    "actionConfirm": "Confirm",
+    "actionShip": "Ship",
+    "actionComplete": "Complete",
+    "confirmTitle": "Update Order Status",
+    "confirmContent": "Are you sure you want to update this order status?",
+    "confirmBtn": "Confirm"
+  },
+  "adminPoints": {
+    "title": "Points Management",
+    "grant": "Grant Points",
+    "deduct": "Deduct Points",
+    "searchPlaceholder": "Search by username...",
+    "search": "Search",
+    "empty": "No accounts found",
+    "col": {
+      "username": "Username",
+      "displayName": "Display Name",
+      "balance": "Balance",
+      "totalEarned": "Total Earned",
+      "totalSpent": "Total Spent",
+      "actions": "Actions"
+    },
+    "grantBtn": "Grant",
+    "deductBtn": "Deduct",
+    "grantTitle": "Grant Points",
+    "deductTitle": "Deduct Points",
+    "targetUser": "Target User",
+    "currentBalance": "Current Balance",
+    "maxDeduct": "Max deductible",
+    "form": {
+      "points": "Points",
+      "description": "Description"
+    },
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "submitError": "Operation failed, please try again",
+    "validation": {
+      "points": "Points must be a positive integer",
+      "description": "Description is required",
+      "exceedsBalance": "Deduct amount cannot exceed current balance"
+    }
+  },
+  "adminUsers": {
+    "title": "User Management",
+    "create": "Create User",
+    "searchPlaceholder": "Search by keyword...",
+    "search": "Search",
+    "empty": "No users found",
+    "col": {
+      "username": "Username",
+      "displayName": "Display Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "createdAt": "Created At"
+    },
+    "roleAdmin": "Admin",
+    "roleEmployee": "Employee",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "createTitle": "Create User",
+    "form": {
+      "username": "Username",
+      "usernameHelp": "4-32 characters, alphanumeric and underscore only",
+      "password": "Password",
+      "passwordHelp": "Minimum 6 characters",
+      "displayName": "Display Name",
+      "displayNameHelp": "2-50 characters",
+      "email": "Email",
+      "role": "Role"
+    },
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "submitError": "Operation failed, please try again",
+    "validation": {
+      "username": "Username: 4-32 characters, alphanumeric and underscore only",
+      "password": "Password must be at least 6 characters",
+      "displayName": "Display name: 2-50 characters",
+      "email": "Invalid email format",
+      "role": "Role is required"
+    }
   }
 }

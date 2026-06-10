@@ -2,7 +2,7 @@
   "id": "FEAT-006",
   "type": "feat",
   "description": "Step 9: Admin Pages - Refactor Dashboard, create ProductManage, CategoryManage, OrderManage, PointsManage, UserManage. All admin pages use DataTable pattern with search, filter, CRUD dialogs.",
-  "status": "pending",
+  "status": "in_progress",
   "steps": [
     "Refactor `src/pages/Dashboard/index.tsx`: Keep existing layout and metric cards structure. Replace hardcoded METRICS values with data that could come from a service (for now keep static since no dashboard service is defined, but remove the hardcoded RECENT_ORDERS and fetch from orderService.getAllOrders with size=5). Update status mapping to use OrderStatus type. Keep metric cards as-is (they represent summary data that will come from a future API).",
     "Create `src/pages/admin/ProductManage/index.tsx`: Full CRUD table page. Features: search by name, filter by category (dropdown), paginated MUI Table. Columns: name, SKU, category, points price, stock (red if <10 per BR-F6.5), status (chip), actions. Actions: edit, delete, toggle status (up/down shelf). Create button opens CreateDialog. Edit opens EditDialog (prefilled). Delete shows ConfirmDialog (BR-F6.2). Batch select with batch status update. Form validation per business-logic-model.md (name 2-200, sku required, pointsPrice positive int, stock >=0). Dialog closes on success, shows error on failure (BR-F6.3).",

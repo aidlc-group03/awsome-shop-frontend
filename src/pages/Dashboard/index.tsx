@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -9,11 +10,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Link from '@mui/material/Link';
-import Chip from '@mui/material/Chip';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import GroupIcon from '@mui/icons-material/Group';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import TollIcon from '@mui/icons-material/Toll';
+import type { Order } from '../../types';
+import { orderService } from '../../services/orderService';
+import StatusChip from '../../components/StatusChip';
+import LoadingState from '../../components/LoadingState';
+
 const METRICS = [
   {
     key: 'totalProducts',
@@ -53,31 +58,29 @@ const METRICS = [
   },
 ];
 
-type OrderStatus = 'completed' | 'pending' | 'processing';
-
-interface RecentOrder {
-  user: string;
-  product: string;
-  points: string;
-  status: OrderStatus;
-  time: string;
-}
-
-const RECENT_ORDERS: RecentOrder[] = [
-  { user: '王芳', product: '星巴克礼品卡 200元', points: '680', status: 'completed', time: '02-10 14:30' },
-  { user: '李明', product: 'Sony WH-1000XM5 降噪耳机', points: '2,580', status: 'pending', time: '02-10 11:20' },
-  { user: '赵敏', product: '小米双肩背包 都市休闲款', points: '450', status: 'processing', time: '02-09 16:45' },
-  { user: '孙磊', product: 'Apple Watch Series 9', points: '3,200', status: 'completed', time: '02-09 09:15' },
-];
-
-const STATUS_CONFIG: Record<OrderStatus, { label: string; color: string; bg: string }> = {
-  completed: { label: '已完成', color: '#166534', bg: '#DCFCE7' },
-  pending: { label: '待发货', color: '#1E40AF', bg: '#DBEAFE' },
-  processing: { label: '处理中', color: '#92400E', bg: '#FEF3C7' },
-};
-
 export default function Dashboard() {
   const { t } = useTranslation();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRecentOrders = async () => {
+      try {
+        const result = await orderService.getAllOrders({ page: 1, size: 5 });
+        setOrders(result.records);
+      } catch {
+        setOrders([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRecentOrders();
+  }, []);
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '24px', p: '32px' }}>
@@ -86,7 +89,7 @@ export default function Dashboard() {
         {t('admin.dashboard')}
       </Typography>
 
-      {/* Metric Cards - design: gap 20 */}
+      {/* Metric Cards */}
       <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
         {METRICS.map((metric) => {
           const IconComp = metric.icon;
@@ -166,58 +169,50 @@ export default function Dashboard() {
           </Link>
         </Box>
 
-        <TableContainer>
-          <Table sx={{ '& .MuiTableCell-root': { borderColor: '#F1F5F9' } }}>
-            <TableHead>
-              <TableRow sx={{ bgcolor: '#F8FAFC' }}>
-                <TableCell sx={{ fontSize: 12, fontWeight: 600, color: 'text.secondary', width: 120, py: '10px', px: '20px' }}>
-                  {t('admin.table.user')}
-                </TableCell>
-                <TableCell sx={{ fontSize: 12, fontWeight: 600, color: 'text.secondary', py: '10px', px: '20px' }}>
-                  {t('admin.table.product')}
-                </TableCell>
-                <TableCell sx={{ fontSize: 12, fontWeight: 600, color: 'text.secondary', width: 80, py: '10px', px: '20px' }}>
-                  {t('admin.table.points')}
-                </TableCell>
-                <TableCell sx={{ fontSize: 12, fontWeight: 600, color: 'text.secondary', width: 90, py: '10px', px: '20px' }}>
-                  {t('admin.table.status')}
-                </TableCell>
-                <TableCell sx={{ fontSize: 12, fontWeight: 600, color: 'text.secondary', width: 120, py: '10px', px: '20px' }}>
-                  {t('admin.table.time')}
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {RECENT_ORDERS.map((order, idx) => {
-                const statusCfg = STATUS_CONFIG[order.status];
-                return (
-                  <TableRow key={idx} sx={{ '&:last-child td': { borderBottom: 0 } }}>
-                    <TableCell sx={{ fontSize: 13, py: '12px', px: '20px' }}>{order.user}</TableCell>
-                    <TableCell sx={{ fontSize: 13, py: '12px', px: '20px' }}>{order.product}</TableCell>
-                    <TableCell sx={{ fontSize: 13, py: '12px', px: '20px' }}>{order.points}</TableCell>
+        {loading ? (
+          <Box sx={{ p: 2.5 }}>
+            <LoadingState type="table" rows={5} />
+          </Box>
+        ) : (
+          <TableContainer>
+            <Table sx={{ '& .MuiTableCell-root': { borderColor: '#F1F5F9' } }}>
+              <TableHead>
+                <TableRow sx={{ bgcolor: '#F8FAFC' }}>
+                  <TableCell sx={{ fontSize: 12, fontWeight: 600, color: 'text.secondary', width: 120, py: '10px', px: '20px' }}>
+                    {t('admin.table.user')}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: 12, fontWeight: 600, color: 'text.secondary', py: '10px', px: '20px' }}>
+                    {t('admin.table.product')}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: 12, fontWeight: 600, color: 'text.secondary', width: 80, py: '10px', px: '20px' }}>
+                    {t('admin.table.points')}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: 12, fontWeight: 600, color: 'text.secondary', width: 90, py: '10px', px: '20px' }}>
+                    {t('admin.table.status')}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: 12, fontWeight: 600, color: 'text.secondary', width: 120, py: '10px', px: '20px' }}>
+                    {t('admin.table.time')}
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {orders.map((order) => (
+                  <TableRow key={order.id} sx={{ '&:last-child td': { borderBottom: 0 } }}>
+                    <TableCell sx={{ fontSize: 13, py: '12px', px: '20px' }}>{order.recipientName}</TableCell>
+                    <TableCell sx={{ fontSize: 13, py: '12px', px: '20px' }}>{order.productName}</TableCell>
+                    <TableCell sx={{ fontSize: 13, py: '12px', px: '20px' }}>{order.pointsAmount.toLocaleString()}</TableCell>
                     <TableCell sx={{ py: '12px', px: '20px' }}>
-                      <Chip
-                        label={statusCfg.label}
-                        size="small"
-                        sx={{
-                          fontSize: 11,
-                          fontWeight: 500,
-                          color: statusCfg.color,
-                          bgcolor: statusCfg.bg,
-                          borderRadius: '12px',
-                          height: 24,
-                        }}
-                      />
+                      <StatusChip status={order.status} type="order" />
                     </TableCell>
                     <TableCell sx={{ fontSize: 13, color: 'text.secondary', py: '12px', px: '20px' }}>
-                      {order.time}
+                      {formatDate(order.createdAt)}
                     </TableCell>
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </Paper>
     </Box>
   );
