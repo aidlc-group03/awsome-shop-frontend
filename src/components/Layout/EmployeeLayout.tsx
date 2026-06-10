@@ -8,7 +8,6 @@ import Button from '@mui/material/Button';
 import RedeemIcon from '@mui/icons-material/Redeem';
 import SearchIcon from '@mui/icons-material/Search';
 import TollIcon from '@mui/icons-material/Toll';
-import { useAuthStore } from '../../store/useAuthStore';
 import AvatarMenu from '../AvatarMenu';
 
 const NAV_ITEMS = [
@@ -21,7 +20,6 @@ export default function EmployeeLayout() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const user = useAuthStore((s) => s.user);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: '#F8FAFC' }}>
@@ -119,7 +117,7 @@ export default function EmployeeLayout() {
           </Box>
           <Chip
             icon={<TollIcon sx={{ fontSize: 18, color: '#D97706 !important' }} />}
-            label={`${(user?.points ?? 0).toLocaleString()} ${t('employee.points')}`}
+            label={`${(0).toLocaleString()} ${t('employee.points')}`}
             sx={{
               bgcolor: '#FFFBEB',
               color: '#D97706',
