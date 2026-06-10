@@ -2,7 +2,7 @@
   "id": "FEAT-002",
   "type": "feat",
   "description": "Steps 3-4b: Types, Request Enhancement, Mock Switch, and Mock Data Layer. Creates the foundational type system, enhances the axios request wrapper with ApiResult<T> unwrapping, adds VITE_USE_MOCK env switch, and implements the complete mock data layer.",
-  "status": "in_progress",
+  "status": "completed",
   "steps": [
     "Create `src/types/index.ts` with ALL TypeScript types from domain-entities.md: UserRole, UserInfo, LoginRequest, LoginResponse, CreateUserRequest, ListUserParams, Product, CreateProductRequest, UpdateProductRequest, ListProductParams, Category, CreateCategoryRequest, UpdateCategoryRequest, OrderStatus, Order, CreateOrderRequest, ListOrderParams, UpdateOrderStatusRequest, TransactionType, PointsBalance, PointsTransaction, PointsAccount, GrantPointsRequest, DeductPointsRequest, ListTransactionParams, ListAccountsParams, PageResult<T>, ApiResult<T>. Export all types.",
     "Modify `src/services/request.ts`: Add generic ApiResult<T> unwrapping in the response interceptor (return response.data.data for successful API responses), keep 401 redirect, add unified error throw with error message from ApiResult.",
@@ -22,5 +22,5 @@
     "Run `npm run build` and confirm exit code 0"
   ],
   "blocked_reason": null,
-  "findings": ""
+  "findings": "All types exported from src/types/index.ts. Request interceptor unwraps ApiResult (checks code 0 or 200). vite-env.d.ts adds VITE_USE_MOCK and VITE_API_BASE_URL to ImportMetaEnv. Mock data includes 4 users, 9 products (one inactive with 0 stock), 6 categories matching ShopHome, 9 orders in all statuses, 12 transactions of all types, 3 points accounts. Mock handlers support full CRUD, pagination, filtering, order creation with stock/points deduction, cancellation with refund. Build passes cleanly (tsc + vite)."
 }
