@@ -1,0 +1,27 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Steps 5-6: API Service Layer (6 services with dual mock/real) + Auth Store Refactoring. Each service checks VITE_USE_MOCK and routes to mock or real HTTP. Auth store is refactored to use authService.",
+  "status": "pending",
+  "steps": [
+    "Create `src/services/authService.ts`: login(username, password) -> Promise<LoginResponse>. If VITE_USE_MOCK, call mock.authLogin; else POST /api/auth/login via request.",
+    "Create `src/services/productService.ts`: getList(params) -> Promise<PageResult<Product>>, getById(id) -> Promise<Product>, create(data) -> Promise<Product>, update(data) -> Promise<Product>, delete(id) -> Promise<void>, updateStatus(id, status) -> Promise<void>, batchUpdateStatus(ids[], status) -> Promise<void>. Dual mock/real.",
+    "Create `src/services/categoryService.ts`: getPublicList() -> Promise<Category[]>, getList() -> Promise<Category[]>, create(data) -> Promise<Category>, update(data) -> Promise<Category>, delete(id) -> Promise<void>. Dual mock/real.",
+    "Create `src/services/orderService.ts`: create(data) -> Promise<Order>, getMyOrders(params) -> Promise<PageResult<Order>>, getById(id) -> Promise<Order>, getAllOrders(params) -> Promise<PageResult<Order>>, updateStatus(id, status) -> Promise<void>. Dual mock/real.",
+    "Create `src/services/pointsService.ts`: getBalance() -> Promise<PointsBalance>, getTransactions(params) -> Promise<PageResult<PointsTransaction>>, grant(data) -> Promise<void>, deduct(data) -> Promise<void>, getAccounts(params) -> Promise<PageResult<PointsAccount>>. Dual mock/real.",
+    "Create `src/services/userService.ts`: getProfile() -> Promise<UserInfo>, create(data) -> Promise<UserInfo>, getList(params) -> Promise<PageResult<UserInfo>>. Dual mock/real.",
+    "Refactor `src/store/useAuthStore.ts`: Remove MOCK_USERS, remove old UserInfo/UserRole types (use from src/types). Import and call authService.login(). Store token in localStorage('token'). Keep Zustand persist for user. Add token field to state. Update UserInfo to match src/types (id, email, avatarUrl, status). Export UserRole type re-export from types."
+  ],
+  "acceptance_criteria": [
+    "All 6 service files exist with correct signatures matching business-logic-model.md",
+    "Each service method checks import.meta.env.VITE_USE_MOCK and routes accordingly",
+    "useAuthStore no longer has MOCK_USERS, calls authService.login instead",
+    "useAuthStore stores token in localStorage and user info via persist",
+    "`npm run build` passes with no type errors"
+  ],
+  "verification": [
+    "Run `npm run build` and confirm exit code 0"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

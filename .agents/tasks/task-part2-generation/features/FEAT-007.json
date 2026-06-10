@@ -1,0 +1,26 @@
+{
+  "id": "FEAT-007",
+  "type": "feat",
+  "description": "Steps 10-11: Router Update and i18n Expansion. Register all new employee + admin routes with proper AuthGuard. Expand zh.json and en.json with all new page i18n keys.",
+  "status": "pending",
+  "steps": [
+    "Update `src/router/index.tsx`: Add all employee routes under '/' with AuthGuard(employee): /product/:id (ProductDetail), /redeem/:id (Redemption), /redeem/success (RedemptionSuccess), /orders (Orders), /orders/:id (OrderDetail), /points (PointsCenter). Add all admin routes under '/admin' with AuthGuard(admin): /admin/products (ProductManage), /admin/categories (CategoryManage), /admin/orders (OrderManage), /admin/points (PointsManage), /admin/users (UserManage). Import all new page components with React.lazy for code splitting.",
+    "Expand `src/i18n/locales/zh.json`: Add keys for all new pages - productDetail (title, redeem, soldOut, insufficientPoints, specs, description, deliveryMethod, serviceGuarantee, marketPrice), redemption (title, productSummary, pointsToDeduct, deliveryForm, recipientName, recipientPhone, recipientAddress, phoneFormatError, confirm, submitting), redemptionSuccess (title, orderNo, product, pointsDeducted, viewOrder, continueShopping), orders (title, filterAll, statusPending, statusConfirmed, statusShipping, statusCompleted, statusCancelled, orderNo, noOrders), orderDetail (title, statusTimeline, productInfo, deliveryInfo, back), pointsCenter (title, balance, totalEarned, totalSpent, transactions, filterAll, typeEarn, typeSpend, typeRefund, typeAdminAdd, typeAdminDeduct, noTransactions), admin pages (productManage.*, categoryManage.*, orderManage.*, pointsManage.*, userManage.* with all field labels, button texts, dialog titles, validation messages, confirm messages).",
+    "Expand `src/i18n/locales/en.json`: English translations for all the same keys added to zh.json.",
+    "Update `src/components/Layout/EmployeeLayout.tsx` if needed: Ensure the points display in the nav bar reads from pointsService.getBalance() or from the auth store user data (BR-F5.4 - nav always shows current points balance)."
+  ],
+  "acceptance_criteria": [
+    "All routes defined in business-logic-model.md are registered in router/index.tsx",
+    "Employee routes are guarded with requiredRole='employee'",
+    "Admin routes are guarded with requiredRole='admin'",
+    "zh.json and en.json have complete i18n keys for all new pages",
+    "No hardcoded Chinese/English text in any page component (all through t() function)",
+    "EmployeeLayout nav shows current points balance (BR-F5.4)",
+    "`npm run build` passes with no type errors"
+  ],
+  "verification": [
+    "Run `npm run build` and confirm exit code 0"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

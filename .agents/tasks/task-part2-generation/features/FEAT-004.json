@@ -1,0 +1,27 @@
+{
+  "id": "FEAT-004",
+  "type": "feat",
+  "description": "Step 7: Common Components - PageHeader, StatusChip, ConfirmDialog, LoadingState, EmptyState, ProductCard. These are shared UI building blocks used across employee and admin pages.",
+  "status": "pending",
+  "steps": [
+    "Create `src/components/PageHeader.tsx`: Accepts title (string), subtitle (optional string), action (optional ReactNode for right-side button/actions). Renders a flex row with Typography title/subtitle on left, action on right. Use i18n-ready pattern.",
+    "Create `src/components/StatusChip.tsx`: Accepts status (OrderStatus or TransactionType) and type ('order' | 'transaction'). Maps to colors per BR-F4.2 (order: pending=orange, confirmed=blue, shipping=purple, completed=green, cancelled=grey) and BR-F5.2 (transaction: earn/admin_add=green with +, spend/admin_deduct=red with -, refund=blue with +). Uses MUI Chip.",
+    "Create `src/components/ConfirmDialog.tsx`: Accepts open, onClose, onConfirm, title, content (string or ReactNode), confirmText, cancelText, loading (optional boolean for button disabled state). MUI Dialog with title, content, cancel/confirm buttons. Per BR-F6.2.",
+    "Create `src/components/LoadingState.tsx`: Accepts type ('table' | 'card' | 'detail') and optional rows count. Renders MUI Skeleton variants appropriate for the type - table shows row skeletons, card shows card grid skeletons, detail shows block skeletons.",
+    "Create `src/components/EmptyState.tsx`: Accepts message (string, optional), icon (optional ReactNode). Shows centered column with icon (default InboxIcon) + message text. Per BR-F6.4.",
+    "Create `src/components/ProductCard.tsx`: Accepts Product type from src/types. Renders card with image area (placeholder with ShoppingBag icon if no imageUrl), product name, category, points price with TollIcon, sold count, stock-out badge ('soldOut' when stock=0 per BR-F2.4), and redeem button. onClick prop for navigation. Follow the existing ShopHome card pattern but as reusable component."
+  ],
+  "acceptance_criteria": [
+    "All 6 component files exist in src/components/",
+    "Each component has properly typed props using TypeScript interfaces",
+    "StatusChip correctly maps all OrderStatus and TransactionType values to appropriate colors",
+    "ProductCard shows sold-out state when stock=0 (BR-F2.4)",
+    "ConfirmDialog has loading state support for the confirm button",
+    "`npm run build` passes with no type errors"
+  ],
+  "verification": [
+    "Run `npm run build` and confirm exit code 0"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

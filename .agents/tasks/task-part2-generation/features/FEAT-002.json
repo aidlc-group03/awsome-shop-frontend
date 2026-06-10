@@ -1,0 +1,26 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Steps 3-4b: Types, Request Enhancement, Mock Switch, and Mock Data Layer. Creates the foundational type system, enhances the axios request wrapper with ApiResult<T> unwrapping, adds VITE_USE_MOCK env switch, and implements the complete mock data layer.",
+  "status": "pending",
+  "steps": [
+    "Create `src/types/index.ts` with ALL TypeScript types from domain-entities.md: UserRole, UserInfo, LoginRequest, LoginResponse, CreateUserRequest, ListUserParams, Product, CreateProductRequest, UpdateProductRequest, ListProductParams, Category, CreateCategoryRequest, UpdateCategoryRequest, OrderStatus, Order, CreateOrderRequest, ListOrderParams, UpdateOrderStatusRequest, TransactionType, PointsBalance, PointsTransaction, PointsAccount, GrantPointsRequest, DeductPointsRequest, ListTransactionParams, ListAccountsParams, PageResult<T>, ApiResult<T>. Export all types.",
+    "Modify `src/services/request.ts`: Add generic ApiResult<T> unwrapping in the response interceptor (return response.data.data for successful API responses), keep 401 redirect, add unified error throw with error message from ApiResult.",
+    "Add VITE_USE_MOCK environment variable support: create `.env` file with `VITE_USE_MOCK=true`, and ensure vite.config.ts does NOT need changes (Vite auto-loads .env files). Add type declaration for import.meta.env in `src/vite-env.d.ts` if it does not exist.",
+    "Create `src/mock/data.ts`: Mock data sets based on domain-entities types - mockUsers (admin + 3 employees with varied points), mockProducts (8+ products across categories with varied status/stock/prices), mockCategories (6 categories matching existing ShopHome CATEGORIES), mockOrders (8+ orders in various statuses), mockPointsTransactions (10+ transactions of varied types), mockPointsAccounts (matching users).",
+    "Create `src/mock/index.ts`: Implement mockDelay() helper (300-600ms random), and mock handler functions for EVERY service method defined in business-logic-model.md. Must support: pagination (PageResult), filtering by params, CRUD operations (in-memory add/update/delete), status updates, batch operations. Return structures matching real API exactly (PageResult for lists, entities for single items)."
+  ],
+  "acceptance_criteria": [
+    "src/types/index.ts exports all types defined in domain-entities.md",
+    "src/services/request.ts has generic ApiResult unwrapping and preserves 401 redirect",
+    ".env file exists with VITE_USE_MOCK=true",
+    "src/mock/data.ts has realistic mock data for all entity types",
+    "src/mock/index.ts has mock implementations for all service operations with pagination, filtering, CRUD",
+    "`npm run build` passes with no type errors"
+  ],
+  "verification": [
+    "Run `npm run build` and confirm exit code 0"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

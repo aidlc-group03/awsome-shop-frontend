@@ -1,0 +1,33 @@
+{
+  "id": "FEAT-005",
+  "type": "feat",
+  "description": "Step 8: Employee Pages - Refactor Login and ShopHome, create ProductDetail, Redemption, RedemptionSuccess, Orders, OrderDetail, PointsCenter. All pages use services, common components, and follow business rules.",
+  "status": "pending",
+  "steps": [
+    "Refactor `src/pages/Login/index.tsx`: Remove the info Alert hint about mock accounts (or keep it conditional on VITE_USE_MOCK). The login already calls useAuthStore.login which now calls authService. Ensure it works with the refactored auth store. Keep existing UI layout unchanged.",
+    "Refactor `src/pages/ShopHome/index.tsx`: Remove hardcoded PRODUCTS and CATEGORIES arrays. Use productService.getList() and categoryService.getPublicList() with useEffect/useState. Use the new ProductCard component for rendering. Keep the hero banner. Add category filtering via state. Add pagination support. Navigate to /product/:id on card click. Show loading states. Per BR-F2.",
+    "Create `src/pages/ProductDetail/index.tsx`: Route /product/:id. Fetch product by ID via productService.getById(). Display: product image area, name, subtitle, points price (with TollIcon), market price (strikethrough), description, specs table, delivery method, service guarantee. 'Redeem Now' button navigates to /redeem/:id. If stock=0, show sold-out and disable button (BR-F2.4). If user points < product points, disable button with 'Insufficient points' tooltip (BR-F3.1). Show loading skeleton while fetching.",
+    "Create `src/pages/Redemption/index.tsx`: Route /redeem/:id. Shows product summary (name, image, points to deduct) at top. Delivery form with: recipientName (required, 2-20 chars), recipientPhone (required, 11-digit starting with 1 per BR-F3.4), recipientAddress (required, 5-200 chars). Validate on submit. Call orderService.create(). Button disabled during submit (BR-F3.5). On success navigate to /redeem/success with order data. On failure show error (BR-F3.7).",
+    "Create `src/pages/RedemptionSuccess/index.tsx`: Route /redeem/success. Display success icon (CheckCircle), order number, product name, points deducted. Buttons: 'View Order' (navigate to /orders/:id), 'Continue Shopping' (navigate to /). Use location state to receive order data.",
+    "Create `src/pages/Orders/index.tsx`: Route /orders. Fetch user orders via orderService.getMyOrders(). Status filter tabs/chips (all, pending, confirmed, shipping, completed, cancelled) per BR-F4.3. List shows: order number, product name, points amount, status (StatusChip), date. Click navigates to /orders/:id. Pagination. Empty state when no orders. Loading skeleton.",
+    "Create `src/pages/OrderDetail/index.tsx`: Route /orders/:id. Fetch order via orderService.getById(). Show: order number, status (StatusChip), product info (name, points, quantity), delivery info (recipient, phone, address), status timeline (created -> confirmed -> shipping -> completed with dates). Back button. Per BR-F4.4.",
+    "Create `src/pages/PointsCenter/index.tsx`: Route /points. Fetch balance via pointsService.getBalance() and transactions via pointsService.getTransactions(). Top section: large balance number, totalEarned, totalSpent cards (BR-F5.1). Transaction list with type filter (all, earn, spend, refund, admin_add, admin_deduct) per BR-F5.3. Each transaction shows: type icon/color (BR-F5.2 via StatusChip), description, points (+/-), date. Pagination."
+  ],
+  "acceptance_criteria": [
+    "Login page works with refactored authService (no more mock hints or conditional on VITE_USE_MOCK)",
+    "ShopHome fetches products/categories from services, uses ProductCard, has category filter and pagination",
+    "ProductDetail shows full product info, handles stock=0 and insufficient points states",
+    "Redemption page has validated delivery form with phone format check (BR-F3.4), prevents double submit",
+    "RedemptionSuccess shows order confirmation info",
+    "Orders page has status filter, pagination, uses StatusChip",
+    "OrderDetail shows order info with status timeline",
+    "PointsCenter shows balance card and filtered transaction list",
+    "All pages have loading states and handle empty states",
+    "`npm run build` passes with no type errors"
+  ],
+  "verification": [
+    "Run `npm run build` and confirm exit code 0"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
