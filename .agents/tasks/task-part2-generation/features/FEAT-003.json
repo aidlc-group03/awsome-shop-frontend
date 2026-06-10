@@ -2,7 +2,7 @@
   "id": "FEAT-003",
   "type": "feat",
   "description": "Steps 5-6: API Service Layer (6 services with dual mock/real) + Auth Store Refactoring. Each service checks VITE_USE_MOCK and routes to mock or real HTTP. Auth store is refactored to use authService.",
-  "status": "pending",
+  "status": "completed",
   "steps": [
     "Create `src/services/authService.ts`: login(username, password) -> Promise<LoginResponse>. If VITE_USE_MOCK, call mock.authLogin; else POST /api/auth/login via request.",
     "Create `src/services/productService.ts`: getList(params) -> Promise<PageResult<Product>>, getById(id) -> Promise<Product>, create(data) -> Promise<Product>, update(data) -> Promise<Product>, delete(id) -> Promise<void>, updateStatus(id, status) -> Promise<void>, batchUpdateStatus(ids[], status) -> Promise<void>. Dual mock/real.",
@@ -23,5 +23,5 @@
     "Run `npm run build` and confirm exit code 0"
   ],
   "blocked_reason": null,
-  "findings": ""
+  "findings": "EmployeeLayout previously used user?.points which does not exist on the new UserInfo type. Replaced with hardcoded 0 and removed the unused useAuthStore import from EmployeeLayout. Points display should be wired to pointsService.getBalance() in a later feature (FEAT-007). The UserRole type is re-exported from useAuthStore so AuthGuard import continues to work."
 }
