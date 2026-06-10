@@ -17,7 +17,21 @@ request.interceptors.request.use(
 );
 
 request.interceptors.response.use(
-  (response) => response.data,
+  (response) => {
+    const res = response.data;
+    // Unwrap ApiResult<T>: return data on success
+    if (res && typeof res === 'object' && 'code' in res) {
+      if (res.code === 0 || res.code === 200) {
+        return res.data;
+      }
+      // Business error: throw with message from ApiResult
+      const error = new Error(res.message || 'Request failed');
+      (error as Error & { code: number }).code = res.code;
+      return Promise.reject(error);
+    }
+    // Non-ApiResult responses (e.g. direct data)
+    return res;
+  },
   (error) => {
     const status = error.response?.status;
     if (status === 401) {
