@@ -2,7 +2,7 @@
   "id": "FEAT-007",
   "type": "feat",
   "description": "Steps 10-11: Router Update and i18n Expansion. Register all new employee + admin routes with proper AuthGuard. Expand zh.json and en.json with all new page i18n keys.",
-  "status": "in_progress",
+  "status": "completed",
   "steps": [
     "Update `src/router/index.tsx`: Add all employee routes under '/' with AuthGuard(employee): /product/:id (ProductDetail), /redeem/:id (Redemption), /redeem/success (RedemptionSuccess), /orders (Orders), /orders/:id (OrderDetail), /points (PointsCenter). Add all admin routes under '/admin' with AuthGuard(admin): /admin/products (ProductManage), /admin/categories (CategoryManage), /admin/orders (OrderManage), /admin/points (PointsManage), /admin/users (UserManage). Import all new page components with React.lazy for code splitting.",
     "Expand `src/i18n/locales/zh.json`: Add keys for all new pages - productDetail (title, redeem, soldOut, insufficientPoints, specs, description, deliveryMethod, serviceGuarantee, marketPrice), redemption (title, productSummary, pointsToDeduct, deliveryForm, recipientName, recipientPhone, recipientAddress, phoneFormatError, confirm, submitting), redemptionSuccess (title, orderNo, product, pointsDeducted, viewOrder, continueShopping), orders (title, filterAll, statusPending, statusConfirmed, statusShipping, statusCompleted, statusCancelled, orderNo, noOrders), orderDetail (title, statusTimeline, productInfo, deliveryInfo, back), pointsCenter (title, balance, totalEarned, totalSpent, transactions, filterAll, typeEarn, typeSpend, typeRefund, typeAdminAdd, typeAdminDeduct, noTransactions), admin pages (productManage.*, categoryManage.*, orderManage.*, pointsManage.*, userManage.* with all field labels, button texts, dialog titles, validation messages, confirm messages).",
@@ -22,5 +22,5 @@
     "Run `npm run build` and confirm exit code 0"
   ],
   "blocked_reason": null,
-  "findings": ""
+  "findings": "Pages use flat i18n key prefixes (product.*, redeem.*, orders.*, points.*) rather than the nested structure originally proposed (productDetail.*, redemption.*, etc.). Added common.back key. Pages also use orders.subtitle and points.subtitle keys for PageHeader components. Build passes with exit code 0."
 }
