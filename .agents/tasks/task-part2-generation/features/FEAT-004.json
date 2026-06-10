@@ -2,7 +2,7 @@
   "id": "FEAT-004",
   "type": "feat",
   "description": "Step 7: Common Components - PageHeader, StatusChip, ConfirmDialog, LoadingState, EmptyState, ProductCard. These are shared UI building blocks used across employee and admin pages.",
-  "status": "pending",
+  "status": "in_progress",
   "steps": [
     "Create `src/components/PageHeader.tsx`: Accepts title (string), subtitle (optional string), action (optional ReactNode for right-side button/actions). Renders a flex row with Typography title/subtitle on left, action on right. Use i18n-ready pattern.",
     "Create `src/components/StatusChip.tsx`: Accepts status (OrderStatus or TransactionType) and type ('order' | 'transaction'). Maps to colors per BR-F4.2 (order: pending=orange, confirmed=blue, shipping=purple, completed=green, cancelled=grey) and BR-F5.2 (transaction: earn/admin_add=green with +, spend/admin_deduct=red with -, refund=blue with +). Uses MUI Chip.",
