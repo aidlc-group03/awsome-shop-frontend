@@ -678,6 +678,7 @@
     "create": "Create User",
     "exportData": "Export",
     "viewPoints": "Points History",
+    "adjustPoints": "Adjust Points",
     "blockUser": "Block User",
     "unblockUser": "Unblock User",
     "blockTitle": "Confirm Block",

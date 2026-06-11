@@ -678,6 +678,7 @@
     "create": "新增用户",
     "exportData": "导出数据",
     "viewPoints": "积分明细",
+    "adjustPoints": "调整积分",
     "blockUser": "禁用用户",
     "unblockUser": "启用用户",
     "blockTitle": "确认禁用用户",

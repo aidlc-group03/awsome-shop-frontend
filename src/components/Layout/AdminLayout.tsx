@@ -7,7 +7,6 @@ import RedeemIcon from '@mui/icons-material/Redeem';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import CategoryIcon from '@mui/icons-material/Category';
-import TollIcon from '@mui/icons-material/Toll';
 import RuleIcon from '@mui/icons-material/Rule';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import GroupIcon from '@mui/icons-material/Group';
@@ -19,7 +18,6 @@ const NAV_ITEMS = [
   { key: 'dashboard', path: '/admin', icon: DashboardIcon },
   { key: 'products', path: '/admin/products', icon: Inventory2Icon },
   { key: 'categories', path: '/admin/categories', icon: CategoryIcon },
-  { key: 'points', path: '/admin/points', icon: TollIcon },
   { key: 'pointRules', path: '/admin/point-rules', icon: RuleIcon },
   { key: 'orders', path: '/admin/orders', icon: ReceiptLongIcon },
   { key: 'users', path: '/admin/users', icon: GroupIcon },

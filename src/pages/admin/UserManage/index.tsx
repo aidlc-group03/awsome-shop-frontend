@@ -26,6 +26,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import BlockIcon from '@mui/icons-material/Block';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import HistoryIcon from '@mui/icons-material/History';
+import TuneIcon from '@mui/icons-material/Tune';
 import GroupIcon from '@mui/icons-material/Group';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -36,6 +37,7 @@ import PageHeader from '../../../components/PageHeader';
 import StatCards from '../../../components/StatCards';
 import LoadingState from '../../../components/LoadingState';
 import EmptyState from '../../../components/EmptyState';
+import AdjustPointsDialog from '../../../components/AdjustPointsDialog';
 
 interface UserFormData {
   username: string;
@@ -82,6 +84,10 @@ export default function UserManage() {
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
+  // Adjust points dialog
+  const [adjustOpen, setAdjustOpen] = useState(false);
+  const [adjustTarget, setAdjustTarget] = useState<UserInfo | null>(null);
+
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
@@ -106,18 +112,22 @@ export default function UserManage() {
   }, [fetchUsers]);
 
   // Load points accounts to fill 积分余额 / 兑换次数
+  const loadAccounts = useCallback(async () => {
+    try {
+      const res = await pointsService.getAccounts({ page: 1, size: 999 });
+      const map: Record<number, PointsAccount> = {};
+      res.records.forEach((a) => {
+        map[a.userId] = a;
+      });
+      setAccounts(map);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   useEffect(() => {
-    pointsService
-      .getAccounts({ page: 1, size: 999 })
-      .then((res) => {
-        const map: Record<number, PointsAccount> = {};
-        res.records.forEach((a) => {
-          map[a.userId] = a;
-        });
-        setAccounts(map);
-      })
-      .catch(() => {});
-  }, [users]);
+    loadAccounts();
+  }, [loadAccounts, users]);
 
   // Stats
   useEffect(() => {
@@ -155,6 +165,11 @@ export default function UserManage() {
     setFormData(INITIAL_FORM);
     setFormError('');
     setDialogOpen(true);
+  };
+
+  const openAdjustDialog = (user: UserInfo) => {
+    setAdjustTarget(user);
+    setAdjustOpen(true);
   };
 
   const handleFormChange = (field: keyof UserFormData, value: string) => {
@@ -336,6 +351,13 @@ export default function UserManage() {
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
                           <IconButton
                             size="small"
+                            title={t('adminUsers.adjustPoints')}
+                            onClick={() => openAdjustDialog(user)}
+                          >
+                            <TuneIcon sx={{ fontSize: 18, color: '#D97706' }} />
+                          </IconButton>
+                          <IconButton
+                            size="small"
                             title={t('adminUsers.viewPoints')}
                             onClick={() => navigate(`/admin/users/${user.id}/points`)}
                           >
@@ -437,6 +459,25 @@ export default function UserManage() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Adjust Points Dialog */}
+      <AdjustPointsDialog
+        open={adjustOpen}
+        user={
+          adjustTarget
+            ? {
+                userId: adjustTarget.id,
+                displayName: adjustTarget.displayName,
+                username: adjustTarget.username,
+                empNo: adjustTarget.empNo,
+                department: adjustTarget.department,
+                balance: accounts[adjustTarget.id]?.balance ?? 0,
+              }
+            : null
+        }
+        onClose={() => setAdjustOpen(false)}
+        onSuccess={loadAccounts}
+      />
     </Box>
   );
 }

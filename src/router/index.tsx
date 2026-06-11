@@ -15,7 +15,6 @@ import ProductManage from '../pages/admin/ProductManage';
 import CategoryManage from '../pages/admin/CategoryManage';
 import OrderManage from '../pages/admin/OrderManage';
 import AdminOrderDetail from '../pages/admin/OrderDetail';
-import PointsManage from '../pages/admin/PointsManage';
 import PointRuleManage from '../pages/admin/PointRuleManage';
 import UserManage from '../pages/admin/UserManage';
 import UserPointsHistory from '../pages/admin/UserPointsHistory';
@@ -58,7 +57,6 @@ const router = createBrowserRouter([
       { path: 'categories', element: <CategoryManage /> },
       { path: 'orders', element: <OrderManage /> },
       { path: 'orders/:id', element: <AdminOrderDetail /> },
-      { path: 'points', element: <PointsManage /> },
       { path: 'point-rules', element: <PointRuleManage /> },
       { path: 'users', element: <UserManage /> },
       { path: 'users/:id/points', element: <UserPointsHistory /> },
