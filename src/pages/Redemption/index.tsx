@@ -1,52 +1,38 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import { useParams, useNavigate, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import Divider from '@mui/material/Divider';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import type { Product, PointsBalance } from '../../types';
+import type { Product, PointsBalance, Address } from '../../types';
 import { productService } from '../../services/productService';
 import { orderService } from '../../services/orderService';
 import { pointsService } from '../../services/pointsService';
+import { addressService, formatAddress } from '../../services/addressService';
 import LoadingState from '../../components/LoadingState';
-
-interface FormData {
-  recipientName: string;
-  recipientPhone: string;
-  recipientAddress: string;
-}
-
-interface FormErrors {
-  recipientName?: string;
-  recipientPhone?: string;
-  recipientAddress?: string;
-}
 
 export default function Redemption() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  // Address chosen on the Delivery Info page (passed via navigation state)
+  const passedAddress = (location.state as { address?: Address } | null)?.address ?? null;
+
   const [product, setProduct] = useState<Product | null>(null);
   const [balance, setBalance] = useState<PointsBalance | null>(null);
+  const [address, setAddress] = useState<Address | null>(passedAddress);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showError, setShowError] = useState(false);
-
-  const [form, setForm] = useState<FormData>({
-    recipientName: '',
-    recipientPhone: '',
-    recipientAddress: '',
-  });
-  const [errors, setErrors] = useState<FormErrors>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,46 +45,38 @@ export default function Redemption() {
         ]);
         setProduct(data);
         setBalance(bal);
+
+        // If no address was passed, fall back to the saved default address.
+        // When the user has no saved address at all, route them to the
+        // Delivery Info page to provide one first.
+        if (!passedAddress) {
+          const list = await addressService.getList();
+          const def = list.find((a) => a.isDefault) ?? list[0];
+          if (def) {
+            setAddress(def);
+          } else {
+            navigate(`/redeem/${id}/delivery`, { replace: true });
+          }
+        }
       } catch {
-        // handle error
+        // handled by empty state
       } finally {
         setLoading(false);
       }
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-    if (!form.recipientName.trim()) {
-      newErrors.recipientName = t('redeem.nameRequired');
-    } else if (form.recipientName.trim().length < 2 || form.recipientName.trim().length > 20) {
-      newErrors.recipientName = t('redeem.nameLength');
-    }
-    const phoneRegex = /^1\d{10}$/;
-    if (!form.recipientPhone.trim()) {
-      newErrors.recipientPhone = t('redeem.phoneRequired');
-    } else if (!phoneRegex.test(form.recipientPhone.trim())) {
-      newErrors.recipientPhone = t('redeem.phoneFormat');
-    }
-    if (!form.recipientAddress.trim()) {
-      newErrors.recipientAddress = t('redeem.addressRequired');
-    } else if (form.recipientAddress.trim().length < 5 || form.recipientAddress.trim().length > 200) {
-      newErrors.recipientAddress = t('redeem.addressLength');
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async () => {
-    if (!validateForm() || !product) return;
+    if (!product || !address) return;
     setSubmitting(true);
     try {
       const order = await orderService.create({
         productId: product.id,
-        recipientName: form.recipientName.trim(),
-        recipientPhone: form.recipientPhone.trim(),
-        recipientAddress: form.recipientAddress.trim(),
+        recipientName: address.recipientName,
+        recipientPhone: address.recipientPhone,
+        recipientAddress: formatAddress(address),
       });
       navigate('/redeem/success', { state: { order } });
     } catch (err: unknown) {
@@ -107,13 +85,6 @@ export default function Redemption() {
       setShowError(true);
     } finally {
       setSubmitting(false);
-    }
-  };
-
-  const handleFieldChange = (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({ ...prev, [field]: e.target.value }));
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
@@ -267,44 +238,43 @@ export default function Redemption() {
           </Box>
         )}
 
-        {/* Delivery Form Card */}
+        {/* Delivery Card (read-only, selected on Delivery Info page) */}
         <Paper elevation={0} sx={cardSx}>
-          <Typography sx={{ fontSize: 16, fontWeight: 600 }}>{t('redeem.receiverInfo')}</Typography>
-          <Divider sx={{ my: 2.5 }} />
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-            <TextField
-              label={t('redeem.recipientName')}
-              value={form.recipientName}
-              onChange={handleFieldChange('recipientName')}
-              error={!!errors.recipientName}
-              helperText={errors.recipientName}
-              fullWidth
-              size="small"
-              placeholder={t('redeem.namePlaceholder')}
-            />
-            <TextField
-              label={t('redeem.recipientPhone')}
-              value={form.recipientPhone}
-              onChange={handleFieldChange('recipientPhone')}
-              error={!!errors.recipientPhone}
-              helperText={errors.recipientPhone}
-              fullWidth
-              size="small"
-              placeholder={t('redeem.phonePlaceholder')}
-            />
-            <TextField
-              label={t('redeem.recipientAddress')}
-              value={form.recipientAddress}
-              onChange={handleFieldChange('recipientAddress')}
-              error={!!errors.recipientAddress}
-              helperText={errors.recipientAddress}
-              fullWidth
-              size="small"
-              multiline
-              rows={3}
-              placeholder={t('redeem.addressPlaceholder')}
-            />
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography sx={{ fontSize: 16, fontWeight: 600 }}>{t('redeem.receiverInfo')}</Typography>
+            <Typography
+              onClick={() => navigate(`/redeem/${product.id}/delivery`)}
+              sx={{ fontSize: 13, fontWeight: 500, color: 'primary.main', cursor: 'pointer' }}
+            >
+              {t('redeem.changeAddress')}
+            </Typography>
           </Box>
+          <Divider sx={{ my: 2 }} />
+          {address ? (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography sx={{ fontSize: 14, color: 'text.secondary' }}>{t('redeem.recipient')}</Typography>
+                <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+                  {address.recipientName}  {address.recipientPhone}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 4 }}>
+                <Typography sx={{ fontSize: 14, color: 'text.secondary', flexShrink: 0 }}>
+                  {t('redeem.addressLabel')}
+                </Typography>
+                <Typography sx={{ fontSize: 14, fontWeight: 500, textAlign: 'right' }}>
+                  {formatAddress(address)}
+                </Typography>
+              </Box>
+            </Box>
+          ) : (
+            <Box
+              onClick={() => navigate(`/redeem/${product.id}/delivery`)}
+              sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer', color: 'primary.main' }}
+            >
+              <Typography sx={{ fontSize: 14, fontWeight: 500 }}>{t('redeem.selectAddress')}</Typography>
+            </Box>
+          )}
         </Paper>
 
         {/* Buttons */}
@@ -313,7 +283,7 @@ export default function Redemption() {
             variant="contained"
             startIcon={<CheckCircleIcon />}
             onClick={handleSubmit}
-            disabled={submitting || insufficient}
+            disabled={submitting || insufficient || !address}
             sx={{ height: 48, borderRadius: 'var(--radius-md, 8px)', fontSize: 16, fontWeight: 600, textTransform: 'none' }}
           >
             {submitting ? t('redeem.submitting') : t('redeem.confirm')}

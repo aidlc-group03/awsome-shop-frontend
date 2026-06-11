@@ -6,6 +6,7 @@ import type {
   PointsTransaction,
   PointsAccount,
   PointsRule,
+  Address,
 } from '../types';
 
 export const mockUsers: UserInfo[] = [
@@ -1036,5 +1037,34 @@ export const mockPointsRules: PointsRule[] = [
     description: '年度优秀员工评选当选后发放',
     createdAt: '2025-01-12T00:00:00Z',
     updatedAt: '2025-01-12T00:00:00Z',
+  },
+];
+
+// Saved delivery addresses (keyed by userId). Seeded for the default
+// employee account (zhangsan, userId=2) so the redemption flow has data.
+export const mockAddresses: Address[] = [
+  {
+    id: 1,
+    userId: 2,
+    recipientName: '张三',
+    recipientPhone: '13800136789',
+    province: '北京市',
+    city: '北京市',
+    district: '海淀区',
+    zipCode: '100193',
+    detailAddress: '中关村软件园 A 座 305',
+    isDefault: true,
+  },
+  {
+    id: 2,
+    userId: 2,
+    recipientName: '张三',
+    recipientPhone: '13900138888',
+    province: '上海市',
+    city: '上海市',
+    district: '浦东新区',
+    zipCode: '201203',
+    detailAddress: '张江高科技园区碧波路 888 号',
+    isDefault: false,
   },
 ];

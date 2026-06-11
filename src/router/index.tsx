@@ -5,6 +5,7 @@ import EmployeeLayout from '../components/Layout/EmployeeLayout';
 import AdminLayout from '../components/Layout/AdminLayout';
 import ShopHome from '../pages/ShopHome';
 import ProductDetail from '../pages/ProductDetail';
+import DeliveryInfo from '../pages/DeliveryInfo';
 import Redemption from '../pages/Redemption';
 import RedemptionSuccess from '../pages/RedemptionSuccess';
 import Orders from '../pages/Orders';
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <ShopHome /> },
       { path: 'product/:id', element: <ProductDetail /> },
+      { path: 'redeem/:id/delivery', element: <DeliveryInfo /> },
       { path: 'redeem/:id', element: <Redemption /> },
       { path: 'redeem/success', element: <RedemptionSuccess /> },
       { path: 'orders', element: <Orders /> },
