@@ -1,0 +1,31 @@
+{
+  "id": "FEAT-006",
+  "type": "feat",
+  "description": "Step 9: Admin Pages - Refactor Dashboard, create ProductManage, CategoryManage, OrderManage, PointsManage, UserManage. All admin pages use DataTable pattern with search, filter, CRUD dialogs.",
+  "status": "completed",
+  "steps": [
+    "Refactor `src/pages/Dashboard/index.tsx`: Keep existing layout and metric cards structure. Replace hardcoded METRICS values with data that could come from a service (for now keep static since no dashboard service is defined, but remove the hardcoded RECENT_ORDERS and fetch from orderService.getAllOrders with size=5). Update status mapping to use OrderStatus type. Keep metric cards as-is (they represent summary data that will come from a future API).",
+    "Create `src/pages/admin/ProductManage/index.tsx`: Full CRUD table page. Features: search by name, filter by category (dropdown), paginated MUI Table. Columns: name, SKU, category, points price, stock (red if <10 per BR-F6.5), status (chip), actions. Actions: edit, delete, toggle status (up/down shelf). Create button opens CreateDialog. Edit opens EditDialog (prefilled). Delete shows ConfirmDialog (BR-F6.2). Batch select with batch status update. Form validation per business-logic-model.md (name 2-200, sku required, pointsPrice positive int, stock >=0). Dialog closes on success, shows error on failure (BR-F6.3).",
+    "Create `src/pages/admin/CategoryManage/index.tsx`: Table with columns: name, icon, sort order, actions. Create/Edit dialog with name (required), iconUrl (optional), sortOrder (optional number). Delete with ConfirmDialog. No pagination needed (categories are usually few).",
+    "Create `src/pages/admin/OrderManage/index.tsx`: Table with: order number, user (userId), product name, points, status (StatusChip), date, actions. Filter by status. Search by keyword. Pagination. Action buttons based on current status per BR-F8.1: pending->Confirm, confirmed->Ship, shipping->Complete. No actions for completed/cancelled (BR-F8.2). Status update via ConfirmDialog (BR-F8.3). Click row to see detail in dialog or expand.",
+    "Create `src/pages/admin/PointsManage/index.tsx`: Shows user points accounts table (pointsService.getAccounts): username, displayName, balance, totalEarned, totalSpent. Search by keyword. Two action buttons: 'Grant Points' and 'Deduct Points' open respective dialogs. Grant dialog: select user (or show current user), points input (positive int), description (required) per BR-F7.1. Deduct dialog: shows current balance, points input (cannot exceed balance per BR-F7.3), description (required) per BR-F7.2. Refresh list after operation (BR-F7.4).",
+    "Create `src/pages/admin/UserManage/index.tsx`: Table with: username, displayName, email, role, status, createdAt, actions. Search by keyword. Pagination. Create User button opens dialog with form: username (4-32 chars, alphanumeric+underscore), password (>=6 chars), displayName (2-50 chars), email (optional, email format), role (select admin/employee). Validation per business-logic-model.md."
+  ],
+  "acceptance_criteria": [
+    "Dashboard shows recent orders from orderService instead of hardcoded data",
+    "ProductManage has full CRUD with search, category filter, batch operations, stock warning (BR-F6.5)",
+    "CategoryManage has CRUD with dialogs",
+    "OrderManage has status-based action buttons (BR-F8.1/8.2) with confirm dialogs (BR-F8.3)",
+    "PointsManage shows accounts, grant/deduct with validation (BR-F7.1-7.4)",
+    "UserManage has user list with create dialog and form validation",
+    "All admin pages use ConfirmDialog for destructive actions (BR-F6.2)",
+    "All forms close dialog on success, show error on failure (BR-F6.3)",
+    "All tables show EmptyState when no data (BR-F6.4)",
+    "`npm run build` passes with no type errors"
+  ],
+  "verification": [
+    "Run `npm run build` and confirm exit code 0"
+  ],
+  "blocked_reason": null,
+  "findings": "All admin pages created successfully. Build passes with zero type errors. Used individual MUI component imports per project convention. Added full i18n translation keys for both en.json and zh.json. Dashboard now fetches real orders from orderService.getAllOrders(). All pages follow patterns from existing employee pages (useCallback for fetch, loading/empty states, proper error handling)."
+}

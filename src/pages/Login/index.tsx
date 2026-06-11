@@ -148,9 +148,11 @@ export default function Login() {
               {t('login.loginFailed')}
             </Alert>
           )}
-          <Alert severity="info" sx={{ borderRadius: 2, fontSize: 13 }}>
-            {t('login.hint')}
-          </Alert>
+          {import.meta.env.VITE_USE_MOCK === 'true' && (
+            <Alert severity="info" sx={{ borderRadius: 2, fontSize: 13 }}>
+              {t('login.hint')}
+            </Alert>
+          )}
 
           {/* Form Fields */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>

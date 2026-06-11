@@ -1,0 +1,29 @@
+{
+  "id": "FEAT-008",
+  "type": "feat",
+  "description": "Steps 12-13: Documentation Summary and Docker. Create code summary doc, Dockerfile (multi-stage with nginx), nginx.conf, .dockerignore, docker-compose.yml, and update README.",
+  "status": "completed",
+  "steps": [
+    "Create `aidlc-docs/construction/web-frontend/code/code-summary.md`: Document all generated files, organized by layer (types, mock, services, store, components, pages/employee, pages/admin, router, i18n). Include: file path, purpose, related user stories. Add section on design-to-code mapping (Pencil frames -> pages). Add section on mock data strategy and how to switch to real API (VITE_USE_MOCK=false). Add story coverage matrix (US-E01~E11, US-A01~A14, US-S01~S03).",
+    "Create `Dockerfile` in project root: Multi-stage build. Stage 1 (build): FROM node:22-alpine, WORKDIR /app, COPY package*.json, RUN npm ci, COPY ., ARG VITE_USE_MOCK=true, RUN npm run build. Stage 2 (serve): FROM nginx:alpine, COPY nginx.conf to /etc/nginx/conf.d/default.conf, COPY --from=build /app/dist to /usr/share/nginx/html, EXPOSE 80.",
+    "Create `nginx.conf` in project root: Server block listening on 80. Root /usr/share/nginx/html. SPA history fallback: location / { try_files $uri $uri/ /index.html; }. Commented-out /api proxy_pass section for future backend integration. Gzip compression for js/css/html. Cache headers for static assets.",
+    "Create `.dockerignore` in project root: node_modules, dist, .git, .env.local, *.log.",
+    "Create `docker-compose.yml` in project root: Single service 'frontend', build context '.', args VITE_USE_MOCK=true, ports '8080:80', restart unless-stopped.",
+    "Update `README.md`: Add Docker section with commands: docker-compose up --build, or docker build/run manually. Mention VITE_USE_MOCK env var. Add development section (npm install, npm run dev, npm run build)."
+  ],
+  "acceptance_criteria": [
+    "aidlc-docs/construction/web-frontend/code/code-summary.md exists with file listing and story coverage",
+    "Dockerfile uses multi-stage build with node:22-alpine and nginx:alpine",
+    "nginx.conf has SPA fallback and commented /api proxy",
+    ".dockerignore excludes node_modules, dist, .git",
+    "docker-compose.yml builds with VITE_USE_MOCK=true and maps port 8080:80",
+    "README.md has Docker and development instructions",
+    "`npm run build` still passes"
+  ],
+  "verification": [
+    "Run `npm run build` and confirm exit code 0",
+    "Run `docker build -t awsome-shop-frontend:test .` and confirm it succeeds"
+  ],
+  "blocked_reason": null,
+  "findings": "All files created successfully. npm run build passes (exit 0). Docker build succeeds with multi-stage build (node:22-alpine + nginx:alpine). Image tagged as awsome-shop-frontend:test."
+}
