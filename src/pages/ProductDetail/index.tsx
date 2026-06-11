@@ -457,7 +457,7 @@ export default function ProductDetail() {
                   variant="contained"
                   disabled={redeemDisabled}
                   startIcon={<ShoppingCartIcon />}
-                  onClick={() => navigate(`/redeem/${product.id}`)}
+                  onClick={() => navigate(`/redeem/${product.id}/delivery`)}
                   sx={{ height: 48, px: 6, borderRadius: 'var(--radius-md, 8px)', fontSize: 16, fontWeight: 600, textTransform: 'none' }}
                 >
                   {isSoldOut ? t('product.soldOut') : t('product.redeemNow')}

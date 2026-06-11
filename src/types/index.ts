@@ -186,6 +186,31 @@ export interface CreateOrderRequest {
   recipientAddress: string;
 }
 
+// Delivery address related types
+export interface Address {
+  id: number;
+  userId: number;
+  recipientName: string;
+  recipientPhone: string;
+  province: string;
+  city: string;
+  district: string | null;
+  zipCode: string | null;
+  detailAddress: string;
+  isDefault: boolean;
+}
+
+export interface CreateAddressRequest {
+  recipientName: string;
+  recipientPhone: string;
+  province: string;
+  city: string;
+  district?: string;
+  zipCode?: string;
+  detailAddress: string;
+  isDefault?: boolean;
+}
+
 export interface ListOrderParams {
   page: number;
   size: number;

@@ -28,6 +28,8 @@ import type {
   CreatePointsRuleRequest,
   UpdatePointsRuleRequest,
   ListPointsRuleParams,
+  Address,
+  CreateAddressRequest,
   PageResult,
 } from '../types';
 import {
@@ -38,6 +40,7 @@ import {
   mockPointsTransactions,
   mockPointsAccounts,
   mockPointsRules,
+  mockAddresses,
 } from './data';
 
 // In-memory data stores (mutable copies)
@@ -48,6 +51,7 @@ let orders = [...mockOrders];
 let pointsTransactions = [...mockPointsTransactions];
 let pointsAccounts = [...mockPointsAccounts];
 let pointsRules = [...mockPointsRules];
+let addresses = [...mockAddresses];
 
 // Current logged-in user ID (set after login)
 let currentUserId: number | null = null;
@@ -794,6 +798,44 @@ export async function mockTogglePointsRule(
   };
   pointsRules = pointsRules.map((r) => (r.id === id ? updated : r));
   return updated;
+}
+
+// ============ Address Service ============
+
+export async function mockGetAddresses(): Promise<Address[]> {
+  await mockDelay();
+  const userId = currentUserId ?? 2;
+  return addresses
+    .filter((a) => a.userId === userId)
+    // Default address first, then most recently added
+    .sort((a, b) => Number(b.isDefault) - Number(a.isDefault) || b.id - a.id);
+}
+
+export async function mockCreateAddress(data: CreateAddressRequest): Promise<Address> {
+  await mockDelay();
+  const userId = currentUserId ?? 2;
+  const makeDefault = data.isDefault ?? false;
+  // If this address becomes default, clear the flag on the user's others
+  if (makeDefault) {
+    addresses = addresses.map((a) =>
+      a.userId === userId ? { ...a, isDefault: false } : a,
+    );
+  }
+  const newAddress: Address = {
+    id: nextId(addresses),
+    userId,
+    recipientName: data.recipientName,
+    recipientPhone: data.recipientPhone,
+    province: data.province,
+    city: data.city,
+    district: data.district || null,
+    zipCode: data.zipCode || null,
+    detailAddress: data.detailAddress,
+    // First address for a user is default by default
+    isDefault: makeDefault || !addresses.some((a) => a.userId === userId),
+  };
+  addresses = [...addresses, newAddress];
+  return newAddress;
 }
 
 // ============ Set current user (called after login) ============
