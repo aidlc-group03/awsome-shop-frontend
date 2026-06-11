@@ -84,12 +84,68 @@ export const mockUsers: UserInfo[] = [
 ];
 
 export const mockCategories: Category[] = [
-  { id: 1, name: '数码电子', iconUrl: null, sortOrder: 1, status: 1 },
-  { id: 2, name: '生活家居', iconUrl: null, sortOrder: 2, status: 1 },
-  { id: 3, name: '美食餐饮', iconUrl: null, sortOrder: 3, status: 1 },
-  { id: 4, name: '礼品卡券', iconUrl: null, sortOrder: 4, status: 1 },
-  { id: 5, name: '办公用品', iconUrl: null, sortOrder: 5, status: 1 },
-  { id: 6, name: '运动户外', iconUrl: null, sortOrder: 6, status: 1 },
+  // Top-level categories
+  {
+    id: 1,
+    name: '数码电子',
+    iconUrl: 'devices',
+    sortOrder: 100,
+    status: 1,
+    parentId: null,
+    description: '包含各类数码电子产品，如耳机、手表、键盘等',
+  },
+  {
+    id: 4,
+    name: '礼品卡券',
+    iconUrl: 'redeem',
+    sortOrder: 90,
+    status: 1,
+    parentId: null,
+    description: '各类购物卡、餐饮卡券等',
+  },
+  {
+    id: 2,
+    name: '生活家居',
+    iconUrl: 'home',
+    sortOrder: 80,
+    status: 1,
+    parentId: null,
+    description: '家居生活用品',
+  },
+  {
+    id: 3,
+    name: '美食餐饮',
+    iconUrl: 'restaurant',
+    sortOrder: 75,
+    status: 1,
+    parentId: null,
+    description: '零食、饮品、餐饮礼盒',
+  },
+  {
+    id: 5,
+    name: '办公用品',
+    iconUrl: 'business_center',
+    sortOrder: 70,
+    status: 1,
+    parentId: null,
+    description: '办公文具与设备',
+  },
+  {
+    id: 6,
+    name: '运动户外',
+    iconUrl: 'fitness_center',
+    sortOrder: 60,
+    status: 0,
+    parentId: null,
+    description: '运动健康相关商品',
+  },
+  // Sub-categories of 数码电子 (id 1)
+  { id: 7, name: '耳机音响', iconUrl: 'headphones', sortOrder: 100, status: 1, parentId: 1, description: null },
+  { id: 8, name: '智能手表', iconUrl: 'watch', sortOrder: 90, status: 1, parentId: 1, description: null },
+  { id: 9, name: '键盘鼠标', iconUrl: 'keyboard', sortOrder: 80, status: 1, parentId: 1, description: null },
+  // Sub-categories of 礼品卡券 (id 4)
+  { id: 10, name: '购物卡', iconUrl: 'shopping_bag', sortOrder: 100, status: 1, parentId: 4, description: null },
+  { id: 11, name: '餐饮卡券', iconUrl: 'restaurant', sortOrder: 85, status: 1, parentId: 4, description: null },
 ];
 
 export const mockProducts: Product[] = [
