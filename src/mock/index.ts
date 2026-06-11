@@ -266,12 +266,15 @@ export async function mockBatchUpdateProductStatus(ids: number[], status: number
 
 export async function mockGetPublicCategoryList(): Promise<Category[]> {
   await mockDelay();
-  return categories.filter((c) => c.status === 1).sort((a, b) => a.sortOrder - b.sortOrder);
+  // Storefront shows only active top-level categories
+  return categories
+    .filter((c) => c.status === 1 && c.parentId == null)
+    .sort((a, b) => b.sortOrder - a.sortOrder);
 }
 
 export async function mockGetCategoryList(): Promise<Category[]> {
   await mockDelay();
-  return [...categories].sort((a, b) => a.sortOrder - b.sortOrder);
+  return [...categories].sort((a, b) => b.sortOrder - a.sortOrder);
 }
 
 export async function mockCreateCategory(data: CreateCategoryRequest): Promise<Category> {
@@ -280,8 +283,10 @@ export async function mockCreateCategory(data: CreateCategoryRequest): Promise<C
     id: nextId(categories),
     name: data.name,
     iconUrl: data.iconUrl || null,
-    sortOrder: data.sortOrder ?? categories.length + 1,
-    status: 1,
+    sortOrder: data.sortOrder ?? 100,
+    status: data.status ?? 1,
+    parentId: data.parentId ?? null,
+    description: data.description || null,
   };
   categories = [...categories, newCategory];
   return newCategory;
@@ -298,18 +303,42 @@ export async function mockUpdateCategory(data: UpdateCategoryRequest): Promise<C
     name: data.name,
     iconUrl: data.iconUrl ?? categories[index].iconUrl,
     sortOrder: data.sortOrder ?? categories[index].sortOrder,
+    parentId: data.parentId !== undefined ? data.parentId : categories[index].parentId,
+    description: data.description !== undefined ? data.description : categories[index].description,
+    status: data.status ?? categories[index].status,
   };
   categories = categories.map((c) => (c.id === data.id ? updated : c));
   return updated;
 }
 
-export async function mockDeleteCategory(id: number): Promise<void> {
+export async function mockUpdateCategoryStatus(id: number, status: number): Promise<Category> {
   await mockDelay();
   const index = categories.findIndex((c) => c.id === id);
   if (index === -1) {
     throw new Error('分类不存在');
   }
-  categories = categories.filter((c) => c.id !== id);
+  const updated: Category = { ...categories[index], status };
+  categories = categories.map((c) => (c.id === id ? updated : c));
+  return updated;
+}
+
+export async function mockDeleteCategory(id: number): Promise<void> {
+  await mockDelay();
+  const target = categories.find((c) => c.id === id);
+  if (!target) {
+    throw new Error('分类不存在');
+  }
+  // Cascade: collect the category itself plus its sub-categories
+  const removedIds = new Set<number>([id]);
+  categories.forEach((c) => {
+    if (c.parentId === id) removedIds.add(c.id);
+  });
+  const removedNames = categories.filter((c) => removedIds.has(c.id)).map((c) => c.name);
+  // Reassign linked products to "未分类"
+  products = products.map((p) =>
+    removedNames.includes(p.category) ? { ...p, category: '未分类' } : p,
+  );
+  categories = categories.filter((c) => !removedIds.has(c.id));
 }
 
 // ============ Order Service ============

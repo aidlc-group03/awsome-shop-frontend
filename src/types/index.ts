@@ -101,12 +101,17 @@ export interface Category {
   iconUrl: string | null;
   sortOrder: number;
   status: number;
+  parentId: number | null;
+  description: string | null;
 }
 
 export interface CreateCategoryRequest {
   name: string;
   iconUrl?: string;
   sortOrder?: number;
+  parentId?: number | null;
+  description?: string;
+  status?: number;
 }
 
 export interface UpdateCategoryRequest {
@@ -114,6 +119,9 @@ export interface UpdateCategoryRequest {
   name: string;
   iconUrl?: string;
   sortOrder?: number;
+  parentId?: number | null;
+  description?: string;
+  status?: number;
 }
 
 // Order related types

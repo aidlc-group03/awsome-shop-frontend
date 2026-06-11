@@ -8,6 +8,7 @@ import {
   mockGetCategoryList,
   mockCreateCategory,
   mockUpdateCategory,
+  mockUpdateCategoryStatus,
   mockDeleteCategory,
 } from '../mock';
 import request from './request';
@@ -41,6 +42,13 @@ export const categoryService = {
       return mockUpdateCategory(data);
     }
     return request.put(`/categories/${data.id}`, data) as Promise<Category>;
+  },
+
+  async updateStatus(id: number, status: number): Promise<Category> {
+    if (isMock()) {
+      return mockUpdateCategoryStatus(id, status);
+    }
+    return request.patch(`/categories/${id}/status`, { status }) as Promise<Category>;
   },
 
   async delete(id: number): Promise<void> {
