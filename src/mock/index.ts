@@ -7,6 +7,7 @@ import type {
   CreateProductRequest,
   UpdateProductRequest,
   ListProductParams,
+  AdjustStockRequest,
   Category,
   CreateCategoryRequest,
   UpdateCategoryRequest,
@@ -192,6 +193,7 @@ export async function mockCreateProduct(data: CreateProductRequest): Promise<Pro
     status: data.status,
     description: data.description || null,
     imageUrl: data.imageUrl || null,
+    images: data.images && data.images.length > 0 ? data.images : null,
     subtitle: data.subtitle || null,
     deliveryMethod: data.deliveryMethod || null,
     serviceGuarantee: data.serviceGuarantee || null,
@@ -223,6 +225,7 @@ export async function mockUpdateProduct(data: UpdateProductRequest): Promise<Pro
     status: data.status,
     description: data.description || null,
     imageUrl: data.imageUrl || null,
+    images: data.images && data.images.length > 0 ? data.images : null,
     subtitle: data.subtitle || null,
     deliveryMethod: data.deliveryMethod || null,
     serviceGuarantee: data.serviceGuarantee || null,
@@ -260,6 +263,26 @@ export async function mockBatchUpdateProductStatus(ids: number[], status: number
   products = products.map((p) =>
     ids.includes(p.id) ? { ...p, status, updatedAt: new Date().toISOString() } : p,
   );
+}
+
+export async function mockAdjustProductStock(data: AdjustStockRequest): Promise<Product> {
+  await mockDelay();
+  const index = products.findIndex((p) => p.id === data.id);
+  if (index === -1) {
+    throw new Error('商品不存在');
+  }
+  const delta = data.type === 'in' ? data.quantity : -data.quantity;
+  const nextStock = products[index].stock + delta;
+  if (nextStock < 0) {
+    throw new Error('出库数量不能大于当前库存');
+  }
+  const updated: Product = {
+    ...products[index],
+    stock: nextStock,
+    updatedAt: new Date().toISOString(),
+  };
+  products = products.map((p) => (p.id === data.id ? updated : p));
+  return updated;
 }
 
 // ============ Category Service ============

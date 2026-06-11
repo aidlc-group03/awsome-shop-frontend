@@ -12,6 +12,8 @@ import OrderDetail from '../pages/OrderDetail';
 import PointsCenter from '../pages/PointsCenter';
 import Dashboard from '../pages/Dashboard';
 import ProductManage from '../pages/admin/ProductManage';
+import AdminProductDetail from '../pages/admin/ProductDetail';
+import AdminProductEdit from '../pages/admin/ProductEdit';
 import CategoryManage from '../pages/admin/CategoryManage';
 import OrderManage from '../pages/admin/OrderManage';
 import AdminOrderDetail from '../pages/admin/OrderDetail';
@@ -54,6 +56,8 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> },
       { path: 'products', element: <ProductManage /> },
+      { path: 'products/:id', element: <AdminProductDetail /> },
+      { path: 'products/:id/edit', element: <AdminProductEdit /> },
       { path: 'categories', element: <CategoryManage /> },
       { path: 'orders', element: <OrderManage /> },
       { path: 'orders/:id', element: <AdminOrderDetail /> },

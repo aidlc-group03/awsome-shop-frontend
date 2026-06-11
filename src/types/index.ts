@@ -54,6 +54,7 @@ export interface Product {
   status: number; // 0=下架, 1=上架
   description: string | null;
   imageUrl: string | null;
+  images?: string[] | null; // 商品图片集（第一张为主图）
   subtitle: string | null;
   deliveryMethod: string | null;
   serviceGuarantee: string | null;
@@ -75,6 +76,7 @@ export interface CreateProductRequest {
   status: number;
   description?: string;
   imageUrl?: string;
+  images?: string[];
   subtitle?: string;
   deliveryMethod?: string;
   serviceGuarantee?: string;
@@ -93,6 +95,14 @@ export interface ListProductParams {
   name?: string;
   category?: string;
   status?: number;
+}
+
+// type: 'in' = 入库(增加), 'out' = 出库(减少)
+export interface AdjustStockRequest {
+  id: number;
+  type: 'in' | 'out';
+  quantity: number;
+  reason?: string;
 }
 
 export interface Category {

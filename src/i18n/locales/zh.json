@@ -334,6 +334,120 @@
       "stock": "库存必须为非负整数"
     }
   },
+  "adminProductDetail": {
+    "breadcrumbList": "产品管理",
+    "breadcrumbDetail": "商品详情",
+    "breadcrumbEdit": "编辑商品",
+    "notFound": "商品不存在",
+    "back": "返回列表",
+    "statusActive": "已上架",
+    "statusInactive": "已下架",
+    "actions": {
+      "delist": "下架",
+      "relist": "上架",
+      "adjustStock": "调整库存",
+      "edit": "编辑商品",
+      "delete": "删除"
+    },
+    "imageTitle": "商品图片",
+    "uploadImage": "上传图片",
+    "basicInfo": "基本信息",
+    "field": {
+      "name": "商品名称",
+      "sku": "商品编号 (SKU)",
+      "category": "商品分类",
+      "brand": "品牌",
+      "pointsPrice": "积分价格",
+      "marketPrice": "市场参考价",
+      "stock": "当前库存",
+      "sold": "已兑换数量",
+      "created": "创建时间",
+      "updated": "最后更新",
+      "delivery": "配送方式",
+      "service": "服务保障",
+      "promo": "促销活动",
+      "color": "可选颜色"
+    },
+    "pointsUnit": "积分",
+    "stockUnit": "件",
+    "descTitle": "商品描述",
+    "specTitle": "规格参数",
+    "empty": "—",
+    "deleteTitle": "删除商品",
+    "deleteContent": "确定要删除该商品吗？此操作不可撤销。",
+    "edit": {
+      "title": "编辑商品信息",
+      "cancel": "取消",
+      "save": "保存修改",
+      "saveSuccess": "保存成功",
+      "basicInfo": "基本信息",
+      "descTitle": "商品描述",
+      "specTitle": "规格参数",
+      "addSpec": "添加参数",
+      "specKeyPlaceholder": "参数名",
+      "specValuePlaceholder": "参数值",
+      "field": {
+        "name": "商品名称",
+        "sku": "商品编号 (SKU)",
+        "category": "商品分类",
+        "brand": "品牌",
+        "pointsPrice": "积分价格",
+        "marketPrice": "市场参考价"
+      },
+      "validation": {
+        "name": "请填写商品名称（至少 2 个字符）",
+        "category": "请选择商品分类",
+        "pointsPrice": "积分价格必须为正整数"
+      }
+    },
+    "stockDialog": {
+      "title": "调整库存",
+      "currentStock": "当前库存",
+      "type": "调整类型",
+      "typeIn": "入库（增加）",
+      "typeOut": "出库（减少）",
+      "quantity": "调整数量",
+      "quantityPlaceholder": "请输入数量",
+      "reason": "调整原因",
+      "reasonPlaceholder": "请输入调整原因（选填）",
+      "preview": "调整后库存",
+      "unit": "件",
+      "cancel": "取消",
+      "confirm": "确认调整",
+      "success": "库存调整成功",
+      "validation": {
+        "quantity": "请输入有效的调整数量",
+        "insufficient": "出库数量不能大于当前库存"
+      }
+    },
+    "uploadDialog": {
+      "title": "上传商品图片",
+      "dropText": "拖拽图片到此处，或点击上传",
+      "hint": "支持 JPG、PNG 格式，单张不超过 5MB，最多上传 10 张",
+      "selectFile": "选择文件",
+      "uploaded": "已上传图片 ({{count}}/{{max}})",
+      "sortHint": "拖拽排序 · 第一张为主图",
+      "mainBadge": "主图",
+      "cancel": "取消",
+      "save": "保存图片",
+      "errorType": "仅支持 JPG、PNG 格式",
+      "errorSize": "单张图片不能超过 5MB",
+      "errorMax": "最多上传 {{max}} 张图片"
+    },
+    "delistDialog": {
+      "title": "确认下架商品",
+      "relistTitle": "确认上架商品",
+      "message": "确定要下架以下商品吗？",
+      "relistMessage": "确定要上架以下商品吗？",
+      "desc": "下架后，员工将无法在积分商城中看到或兑换该商品。您可以随时重新上架。",
+      "relistDesc": "上架后，员工将可以在积分商城中看到并兑换该商品。",
+      "skuStock": "{{sku}} · 库存 {{stock}} 件",
+      "cancel": "取消",
+      "confirm": "确认下架",
+      "relistConfirm": "确认上架",
+      "success": "操作成功"
+    }
+  },
   "adminCategories": {
     "title": "类目管理",
     "create": "新增类目",

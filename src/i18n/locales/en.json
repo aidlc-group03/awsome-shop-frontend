@@ -334,6 +334,120 @@
       "stock": "Stock must be a non-negative integer"
     }
   },
+  "adminProductDetail": {
+    "breadcrumbList": "Products",
+    "breadcrumbDetail": "Product Detail",
+    "breadcrumbEdit": "Edit Product",
+    "notFound": "Product not found",
+    "back": "Back to list",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "actions": {
+      "delist": "Delist",
+      "relist": "Publish",
+      "adjustStock": "Adjust Stock",
+      "edit": "Edit Product",
+      "delete": "Delete"
+    },
+    "imageTitle": "Product Images",
+    "uploadImage": "Upload",
+    "basicInfo": "Basic Info",
+    "field": {
+      "name": "Product Name",
+      "sku": "SKU",
+      "category": "Category",
+      "brand": "Brand",
+      "pointsPrice": "Points Price",
+      "marketPrice": "Market Price",
+      "stock": "Current Stock",
+      "sold": "Redeemed",
+      "created": "Created",
+      "updated": "Last Updated",
+      "delivery": "Delivery",
+      "service": "Service",
+      "promo": "Promotion",
+      "color": "Colors"
+    },
+    "pointsUnit": "pts",
+    "stockUnit": "pcs",
+    "descTitle": "Description",
+    "specTitle": "Specifications",
+    "empty": "—",
+    "deleteTitle": "Delete Product",
+    "deleteContent": "Are you sure you want to delete this product? This cannot be undone.",
+    "edit": {
+      "title": "Edit Product Info",
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "saveSuccess": "Saved successfully",
+      "basicInfo": "Basic Info",
+      "descTitle": "Description",
+      "specTitle": "Specifications",
+      "addSpec": "Add Spec",
+      "specKeyPlaceholder": "Name",
+      "specValuePlaceholder": "Value",
+      "field": {
+        "name": "Product Name",
+        "sku": "SKU",
+        "category": "Category",
+        "brand": "Brand",
+        "pointsPrice": "Points Price",
+        "marketPrice": "Market Price"
+      },
+      "validation": {
+        "name": "Product name is required (at least 2 characters)",
+        "category": "Please select a category",
+        "pointsPrice": "Points price must be a positive integer"
+      }
+    },
+    "stockDialog": {
+      "title": "Adjust Stock",
+      "currentStock": "Current Stock",
+      "type": "Adjustment Type",
+      "typeIn": "Stock In (increase)",
+      "typeOut": "Stock Out (decrease)",
+      "quantity": "Quantity",
+      "quantityPlaceholder": "Enter quantity",
+      "reason": "Reason",
+      "reasonPlaceholder": "Enter a reason (optional)",
+      "preview": "Resulting Stock",
+      "unit": "pcs",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "success": "Stock adjusted successfully",
+      "validation": {
+        "quantity": "Please enter a valid quantity",
+        "insufficient": "Stock-out quantity cannot exceed current stock"
+      }
+    },
+    "uploadDialog": {
+      "title": "Upload Product Images",
+      "dropText": "Drag images here, or click to upload",
+      "hint": "JPG, PNG only. Max 5MB each, up to 10 images.",
+      "selectFile": "Select Files",
+      "uploaded": "Uploaded ({{count}}/{{max}})",
+      "sortHint": "Drag to sort · First is the main image",
+      "mainBadge": "Main",
+      "cancel": "Cancel",
+      "save": "Save Images",
+      "errorType": "Only JPG and PNG are supported",
+      "errorSize": "Each image must be under 5MB",
+      "errorMax": "Up to {{max}} images allowed"
+    },
+    "delistDialog": {
+      "title": "Confirm Delist",
+      "relistTitle": "Confirm Publish",
+      "message": "Delist the following product?",
+      "relistMessage": "Publish the following product?",
+      "desc": "Once delisted, employees can no longer see or redeem this product. You can publish it again anytime.",
+      "relistDesc": "Once published, employees can see and redeem this product in the shop.",
+      "skuStock": "{{sku}} · Stock {{stock}}",
+      "cancel": "Cancel",
+      "confirm": "Confirm Delist",
+      "relistConfirm": "Confirm Publish",
+      "success": "Done"
+    }
+  },
   "adminCategories": {
     "title": "Category Management",
     "create": "Create Category",
