@@ -7,7 +7,7 @@ import RedeemIcon from '@mui/icons-material/Redeem';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import CategoryIcon from '@mui/icons-material/Category';
-import RuleIcon from '@mui/icons-material/Rule';
+import TollIcon from '@mui/icons-material/Toll';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import GroupIcon from '@mui/icons-material/Group';
 import AvatarMenu from '../AvatarMenu';
@@ -18,7 +18,7 @@ const NAV_ITEMS = [
   { key: 'dashboard', path: '/admin', icon: DashboardIcon },
   { key: 'products', path: '/admin/products', icon: Inventory2Icon },
   { key: 'categories', path: '/admin/categories', icon: CategoryIcon },
-  { key: 'pointRules', path: '/admin/point-rules', icon: RuleIcon },
+  { key: 'pointRules', path: '/admin/point-rules', icon: TollIcon },
   { key: 'orders', path: '/admin/orders', icon: ReceiptLongIcon },
   { key: 'users', path: '/admin/users', icon: GroupIcon },
 ];
@@ -45,7 +45,7 @@ export default function AdminLayout() {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', px: '20px', pb: '24px' }}>
           <RedeemIcon sx={{ fontSize: 28, color: '#60A5FA' }} />
           <Typography sx={{ fontSize: 17, fontWeight: 700, color: '#fff' }}>
-            AWSome {t('admin.title')}
+            AWSome Shop
           </Typography>
         </Box>
 
