@@ -234,6 +234,7 @@
       "products": "Products",
       "categories": "Categories",
       "points": "Points",
+      "pointRules": "Points Rules",
       "orders": "Orders",
       "users": "Users"
     },
@@ -494,6 +495,82 @@
       "shipping": "Shipping",
       "completed": "Completed",
       "cancelled": "Cancelled"
+    }
+  },
+  "adminPointRules": {
+    "title": "Points Rule Management",
+    "subtitle": "Configure employee points-granting rules and manage strategies",
+    "addRule": "Add Rule",
+    "statTotal": "Total Rules",
+    "statEnabled": "Enabled",
+    "statMonthly": "Granted This Month",
+    "statCovered": "Covered Employees",
+    "empty": "No points rules",
+    "paginationText": "Showing {{from}}-{{to}} of {{total}} rules",
+    "statusEnabled": "Enabled",
+    "statusDisabled": "Disabled",
+    "actionEdit": "Edit",
+    "actionDisable": "Disable",
+    "actionEnable": "Enable",
+    "createSuccess": "Rule created",
+    "updateSuccess": "Rule updated",
+    "enableSuccess": "Rule enabled",
+    "disableSuccess": "Rule disabled",
+    "col": {
+      "name": "Rule Name",
+      "type": "Type",
+      "points": "Points",
+      "trigger": "Trigger",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "type": {
+      "fixed": "Fixed Grant",
+      "event": "Event Trigger",
+      "performance": "Performance",
+      "holiday": "Holiday"
+    },
+    "scope": {
+      "all": "All Employees",
+      "fulltime": "Full-time",
+      "probation": "Probation",
+      "department": "Specific Dept."
+    },
+    "method": {
+      "auto": "Automatic",
+      "manual": "Manual"
+    },
+    "dialog": {
+      "addTitle": "Add Points Rule",
+      "editTitle": "Edit Points Rule",
+      "name": "Rule Name",
+      "namePlaceholder": "Enter rule name",
+      "type": "Rule Type",
+      "typePlaceholder": "Select rule type",
+      "points": "Points",
+      "pointsPlaceholder": "Enter points value",
+      "trigger": "Trigger Condition",
+      "triggerPlaceholder": "Enter trigger condition",
+      "scope": "Scope",
+      "method": "Grant Method",
+      "status": "Status",
+      "statusOn": "Enabled",
+      "statusOff": "Disabled",
+      "icon": "Rule Icon",
+      "iconSelect": "Select icon",
+      "iconChange": "Click to change",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter rule description (optional)",
+      "cancel": "Cancel",
+      "create": "Create Rule",
+      "save": "Save Changes",
+      "submitError": "Operation failed, please try again",
+      "validation": {
+        "name": "Please enter a rule name",
+        "type": "Please select a rule type",
+        "points": "Please enter a points value",
+        "trigger": "Please enter a trigger condition"
+      }
     }
   },
   "adminPoints": {
