@@ -22,6 +22,11 @@ import type {
   DeductPointsRequest,
   ListTransactionParams,
   ListAccountsParams,
+  PointsRule,
+  PointsRuleStats,
+  CreatePointsRuleRequest,
+  UpdatePointsRuleRequest,
+  ListPointsRuleParams,
   PageResult,
 } from '../types';
 import {
@@ -31,6 +36,7 @@ import {
   mockOrders,
   mockPointsTransactions,
   mockPointsAccounts,
+  mockPointsRules,
 } from './data';
 
 // In-memory data stores (mutable copies)
@@ -40,6 +46,7 @@ let categories = [...mockCategories];
 let orders = [...mockOrders];
 let pointsTransactions = [...mockPointsTransactions];
 let pointsAccounts = [...mockPointsAccounts];
+let pointsRules = [...mockPointsRules];
 
 // Current logged-in user ID (set after login)
 let currentUserId: number | null = null;
@@ -615,6 +622,126 @@ export async function mockGetPointsAccounts(params: ListAccountsParams): Promise
     );
   }
   return paginate(filtered, params.page, params.size);
+}
+
+// ============ Points Rule Service ============
+
+const COVERED_EMPLOYEES = 257;
+const MONTHLY_GRANTED = 128500;
+
+export async function mockGetPointsRules(
+  params: ListPointsRuleParams,
+): Promise<PageResult<PointsRule>> {
+  await mockDelay();
+  let filtered = [...pointsRules];
+  if (params.keyword) {
+    const kw = params.keyword.toLowerCase();
+    filtered = filtered.filter(
+      (r) =>
+        r.name.toLowerCase().includes(kw) ||
+        (r.description ?? '').toLowerCase().includes(kw),
+    );
+  }
+  return paginate(filtered, params.page, params.size);
+}
+
+export async function mockGetPointsRuleStats(): Promise<PointsRuleStats> {
+  await mockDelay();
+  return {
+    total: pointsRules.length,
+    enabled: pointsRules.filter((r) => r.enabled).length,
+    monthlyGranted: MONTHLY_GRANTED,
+    coveredEmployees: COVERED_EMPLOYEES,
+  };
+}
+
+// Theme presets per rule type (used when creating new rules)
+const RULE_TYPE_THEME: Record<
+  CreatePointsRuleRequest['type'],
+  { iconColor: string; iconBg: string }
+> = {
+  fixed: { iconColor: '#2563EB', iconBg: '#EFF6FF' },
+  event: { iconColor: '#8B5CF6', iconBg: '#F5F3FF' },
+  performance: { iconColor: '#059669', iconBg: '#ECFDF5' },
+  holiday: { iconColor: '#6B7280', iconBg: '#F3F4F6' },
+};
+
+export async function mockCreatePointsRule(
+  data: CreatePointsRuleRequest,
+): Promise<PointsRule> {
+  await mockDelay();
+  const theme = RULE_TYPE_THEME[data.type];
+  const now = new Date().toISOString();
+  const rule: PointsRule = {
+    id: nextId(pointsRules),
+    name: data.name,
+    type: data.type,
+    pointsValue: data.pointsValue,
+    triggerCondition: data.triggerCondition,
+    scope: data.scope,
+    grantMethod: data.grantMethod,
+    enabled: data.enabled,
+    icon: data.icon || 'stars',
+    iconColor: theme.iconColor,
+    iconBg: theme.iconBg,
+    description: data.description ?? null,
+    createdAt: now,
+    updatedAt: now,
+  };
+  pointsRules = [rule, ...pointsRules];
+  return rule;
+}
+
+export async function mockUpdatePointsRule(
+  data: UpdatePointsRuleRequest,
+): Promise<PointsRule> {
+  await mockDelay();
+  const index = pointsRules.findIndex((r) => r.id === data.id);
+  if (index === -1) {
+    throw new Error('规则不存在');
+  }
+  const original = pointsRules[index];
+  const theme = RULE_TYPE_THEME[data.type];
+  // Keep the original color theme if the type is unchanged, otherwise adopt the new type theme
+  const colors =
+    data.type === original.type
+      ? { iconColor: original.iconColor, iconBg: original.iconBg }
+      : theme;
+  const updated: PointsRule = {
+    ...original,
+    name: data.name,
+    type: data.type,
+    pointsValue: data.pointsValue,
+    triggerCondition: data.triggerCondition,
+    scope: data.scope,
+    grantMethod: data.grantMethod,
+    enabled: data.enabled,
+    icon: data.icon || original.icon,
+    iconColor: colors.iconColor,
+    iconBg: colors.iconBg,
+    description: data.description ?? null,
+    updatedAt: new Date().toISOString(),
+  };
+  pointsRules = pointsRules.map((r) => (r.id === data.id ? updated : r));
+  return updated;
+}
+
+export async function mockTogglePointsRule(
+  id: number,
+  enabled: boolean,
+): Promise<PointsRule> {
+  await mockDelay();
+  const index = pointsRules.findIndex((r) => r.id === id);
+  if (index === -1) {
+    throw new Error('规则不存在');
+  }
+  const updated: PointsRule = {
+    ...pointsRules[index],
+    enabled,
+    updatedAt: new Date().toISOString(),
+  };
+  pointsRules = pointsRules.map((r) => (r.id === id ? updated : r));
+  return updated;
 }
 
 // ============ Set current user (called after login) ============

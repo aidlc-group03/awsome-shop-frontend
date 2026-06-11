@@ -250,6 +250,58 @@ export interface ListAccountsParams {
   keyword?: string;
 }
 
+// Points rule related types
+export type PointsRuleType = 'fixed' | 'event' | 'performance' | 'holiday';
+export type PointsRuleScope = 'all' | 'fulltime' | 'probation' | 'department';
+export type PointsRuleGrantMethod = 'auto' | 'manual';
+
+export interface PointsRule {
+  id: number;
+  name: string;
+  type: PointsRuleType;
+  // Points value stored as string to support ranges like "300~800"
+  pointsValue: string;
+  triggerCondition: string;
+  scope: PointsRuleScope;
+  grantMethod: PointsRuleGrantMethod;
+  enabled: boolean;
+  icon: string; // Material Symbols icon name
+  iconColor: string; // icon foreground + chip text color
+  iconBg: string; // icon container bg + chip bg
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PointsRuleStats {
+  total: number;
+  enabled: number;
+  monthlyGranted: number;
+  coveredEmployees: number;
+}
+
+export interface CreatePointsRuleRequest {
+  name: string;
+  type: PointsRuleType;
+  pointsValue: string;
+  triggerCondition: string;
+  scope: PointsRuleScope;
+  grantMethod: PointsRuleGrantMethod;
+  enabled: boolean;
+  icon: string;
+  description?: string;
+}
+
+export interface UpdatePointsRuleRequest extends CreatePointsRuleRequest {
+  id: number;
+}
+
+export interface ListPointsRuleParams {
+  page: number;
+  size: number;
+  keyword?: string;
+}
+
 // Generic types
 export interface PageResult<T> {
   records: T[];

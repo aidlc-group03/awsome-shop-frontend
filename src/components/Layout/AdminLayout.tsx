@@ -18,7 +18,7 @@ const NAV_ITEMS = [
   { key: 'dashboard', path: '/admin', icon: DashboardIcon },
   { key: 'products', path: '/admin/products', icon: Inventory2Icon },
   { key: 'categories', path: '/admin/categories', icon: CategoryIcon },
-  { key: 'points', path: '/admin/points', icon: TollIcon },
+  { key: 'pointRules', path: '/admin/point-rules', icon: TollIcon },
   { key: 'orders', path: '/admin/orders', icon: ReceiptLongIcon },
   { key: 'users', path: '/admin/users', icon: GroupIcon },
 ];
@@ -45,7 +45,7 @@ export default function AdminLayout() {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', px: '20px', pb: '24px' }}>
           <RedeemIcon sx={{ fontSize: 28, color: '#60A5FA' }} />
           <Typography sx={{ fontSize: 17, fontWeight: 700, color: '#fff' }}>
-            AWSome {t('admin.title')}
+            AWSome Shop
           </Typography>
         </Box>
 

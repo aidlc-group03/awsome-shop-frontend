@@ -234,6 +234,7 @@
       "products": "产品管理",
       "categories": "分类管理",
       "points": "积分管理",
+      "pointRules": "积分管理",
       "orders": "兑换记录",
       "users": "用户管理"
     },
@@ -496,6 +497,82 @@
       "cancelled": "已取消"
     }
   },
+  "adminPointRules": {
+    "title": "积分规则管理",
+    "subtitle": "配置员工积分发放规则，管理各类型积分策略",
+    "addRule": "新增规则",
+    "statTotal": "规则总数",
+    "statEnabled": "已启用",
+    "statMonthly": "本月发放",
+    "statCovered": "覆盖员工",
+    "empty": "暂无积分规则",
+    "paginationText": "显示 {{from}}-{{to}} 共 {{total}} 条规则",
+    "statusEnabled": "启用",
+    "statusDisabled": "禁用",
+    "actionEdit": "编辑",
+    "actionDisable": "禁用",
+    "actionEnable": "启用",
+    "createSuccess": "规则已创建",
+    "updateSuccess": "规则已更新",
+    "enableSuccess": "规则已启用",
+    "disableSuccess": "规则已禁用",
+    "col": {
+      "name": "规则名称",
+      "type": "规则类型",
+      "points": "积分值",
+      "trigger": "触发条件",
+      "status": "状态",
+      "actions": "操作"
+    },
+    "type": {
+      "fixed": "固定发放",
+      "event": "事件触发",
+      "performance": "绩效关联",
+      "holiday": "节日触发"
+    },
+    "scope": {
+      "all": "全部员工",
+      "fulltime": "正式员工",
+      "probation": "试用期员工",
+      "department": "指定部门"
+    },
+    "method": {
+      "auto": "自动发放",
+      "manual": "手动发放"
+    },
+    "dialog": {
+      "addTitle": "新增积分规则",
+      "editTitle": "编辑积分规则",
+      "name": "规则名称",
+      "namePlaceholder": "请输入规则名称",
+      "type": "规则类型",
+      "typePlaceholder": "请选择规则类型",
+      "points": "积分值",
+      "pointsPlaceholder": "请输入积分值",
+      "trigger": "触发条件",
+      "triggerPlaceholder": "请输入触发条件描述",
+      "scope": "适用范围",
+      "method": "发放方式",
+      "status": "状态",
+      "statusOn": "启用",
+      "statusOff": "停用",
+      "icon": "规则图标",
+      "iconSelect": "选择图标",
+      "iconChange": "点击更换图标",
+      "description": "规则描述",
+      "descriptionPlaceholder": "请输入规则描述（选填）",
+      "cancel": "取消",
+      "create": "创建规则",
+      "save": "保存修改",
+      "submitError": "操作失败，请重试",
+      "validation": {
+        "name": "请输入规则名称",
+        "type": "请选择规则类型",
+        "points": "请输入积分值",
+        "trigger": "请输入触发条件"
+      }
+    }
+  },
   "adminPoints": {
     "title": "积分管理",
     "grant": "发放积分",
@@ -601,6 +678,7 @@
     "create": "新增用户",
     "exportData": "导出数据",
     "viewPoints": "积分明细",
+    "adjustPoints": "调整积分",
     "blockUser": "禁用用户",
     "unblockUser": "启用用户",
     "blockTitle": "确认禁用用户",
