@@ -5,8 +5,10 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
 import TollIcon from '@mui/icons-material/Toll';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import type { Order, OrderStatus } from '../../types';
 import { orderService } from '../../services/orderService';
 import PageHeader from '../../components/PageHeader';
@@ -105,36 +107,80 @@ export default function Orders() {
             {orders.map((order) => (
               <Paper
                 key={order.id}
-                onClick={() => navigate(`/orders/${order.id}`)}
+                elevation={0}
                 sx={{
                   p: 2.5,
                   borderRadius: '12px',
-                  cursor: 'pointer',
+                  border: '1px solid',
+                  borderColor: '#F1F5F9',
                   display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  '&:hover': { boxShadow: 2 },
+                  flexDirection: 'column',
+                  gap: 1.5,
                 }}
               >
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                  <Typography sx={{ fontSize: 15, fontWeight: 600 }}>
-                    {order.productName}
-                  </Typography>
+                {/* Order meta row */}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    pb: 1.5,
+                    borderBottom: '1px solid',
+                    borderColor: 'divider',
+                  }}
+                >
                   <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
-                    {t('orders.orderNo')}: {order.orderNo}
+                    {t('orders.orderNo')}: {order.orderNo} · {formatDate(order.createdAt)}
                   </Typography>
-                  <Typography sx={{ fontSize: 12, color: 'text.secondary' }}>
-                    {formatDate(order.createdAt)}
-                  </Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                    <TollIcon sx={{ fontSize: 16, color: '#D97706' }} />
-                    <Typography sx={{ fontSize: 14, fontWeight: 600, color: '#D97706' }}>
-                      {order.pointsAmount.toLocaleString()}
-                    </Typography>
-                  </Box>
                   <StatusChip status={order.status as OrderStatus} type="order" />
+                </Box>
+
+                {/* Product row */}
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Box
+                    sx={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: '8px',
+                      bgcolor: '#DBEAFE',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <ShoppingBagIcon sx={{ fontSize: 28, color: '#2563EB' }} />
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <Typography sx={{ fontSize: 15, fontWeight: 600 }}>{order.productName}</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
+                      <TollIcon sx={{ fontSize: 16, color: '#D97706' }} />
+                      <Typography sx={{ fontSize: 14, fontWeight: 600, color: '#D97706' }}>
+                        {order.pointsAmount.toLocaleString()}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => navigate(`/orders/${order.id}`)}
+                      sx={{ borderRadius: '8px', textTransform: 'none', fontWeight: 500, borderColor: '#E2E8F0', color: 'text.secondary' }}
+                    >
+                      {t('orders.viewDetail')}
+                    </Button>
+                    {order.status === 'shipping' && (
+                      <Button
+                        variant="contained"
+                        color="success"
+                        size="small"
+                        onClick={() => navigate(`/orders/${order.id}`)}
+                        sx={{ borderRadius: '8px', textTransform: 'none', fontWeight: 600 }}
+                      >
+                        {t('orders.confirmReceipt')}
+                      </Button>
+                    )}
+                  </Box>
                 </Box>
               </Paper>
             ))}

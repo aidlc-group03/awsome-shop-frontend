@@ -3,6 +3,7 @@ import type {
   OrderStatus,
   CreateOrderRequest,
   ListOrderParams,
+  UpdateShippingRequest,
   PageResult,
 } from '../types';
 import {
@@ -11,6 +12,7 @@ import {
   mockGetOrderById,
   mockGetAllOrders,
   mockUpdateOrderStatus,
+  mockUpdateShipping,
 } from '../mock';
 import request from './request';
 
@@ -50,5 +52,12 @@ export const orderService = {
       return mockUpdateOrderStatus(id, status);
     }
     return request.patch(`/orders/${id}/status`, { status }) as Promise<void>;
+  },
+
+  async updateShipping(data: UpdateShippingRequest): Promise<Order> {
+    if (isMock()) {
+      return mockUpdateShipping(data);
+    }
+    return request.patch(`/orders/${data.id}/shipping`, data) as Promise<Order>;
   },
 };

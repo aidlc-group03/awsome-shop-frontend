@@ -14,6 +14,7 @@ import type {
   OrderStatus,
   CreateOrderRequest,
   ListOrderParams,
+  UpdateShippingRequest,
   PointsBalance,
   PointsTransaction,
   PointsAccount,
@@ -99,9 +100,31 @@ export async function mockCreateUser(data: CreateUserRequest): Promise<UserInfo>
     role: data.role,
     avatarUrl: null,
     status: 1,
+    empNo: data.empNo || null,
+    department: data.department || null,
     createdAt: new Date().toISOString(),
   };
   users = [...users, newUser];
+
+  // Create matching points account if it's an employee
+  const exists = pointsAccounts.find((a) => a.userId === newUser.id);
+  if (!exists) {
+    pointsAccounts = [
+      ...pointsAccounts,
+      {
+        id: nextId(pointsAccounts),
+        userId: newUser.id,
+        username: newUser.username,
+        displayName: newUser.displayName,
+        empNo: newUser.empNo,
+        department: newUser.department,
+        balance: 0,
+        totalEarned: 0,
+        totalSpent: 0,
+        redeemCount: 0,
+      },
+    ];
+  }
   return newUser;
 }
 
@@ -329,7 +352,7 @@ export async function mockCreateOrder(data: CreateOrderRequest): Promise<Order> 
   // Deduct points
   pointsAccounts = pointsAccounts.map((a) =>
     a.userId === userId
-      ? { ...a, balance: a.balance - product.pointsPrice, totalSpent: a.totalSpent + product.pointsPrice }
+      ? { ...a, balance: a.balance - product.pointsPrice, totalSpent: a.totalSpent + product.pointsPrice, redeemCount: a.redeemCount + 1 }
       : a,
   );
 
@@ -384,14 +407,22 @@ export async function mockGetAllOrders(params: ListOrderParams): Promise<PageRes
   await mockDelay();
   let filtered = [...orders];
   if (params.status) {
-    filtered = filtered.filter((o) => o.status === params.status);
+    const allowed = params.status.split(',').map((s) => s.trim()).filter(Boolean);
+    if (allowed.length > 0) {
+      filtered = filtered.filter((o) => allowed.includes(o.status));
+    }
+  }
+  if (params.days && params.days > 0) {
+    const cutoff = Date.now() - params.days * 24 * 60 * 60 * 1000;
+    filtered = filtered.filter((o) => new Date(o.createdAt).getTime() >= cutoff);
   }
   if (params.keyword) {
     const kw = params.keyword.toLowerCase();
     filtered = filtered.filter(
       (o) =>
         o.orderNo.toLowerCase().includes(kw) ||
-        o.productName.toLowerCase().includes(kw),
+        o.productName.toLowerCase().includes(kw) ||
+        o.recipientName.toLowerCase().includes(kw),
     );
   }
   // Sort by createdAt descending
@@ -436,6 +467,40 @@ export async function mockUpdateOrderStatus(id: number, status: OrderStatus): Pr
   }
 }
 
+export async function mockUpdateShipping(data: UpdateShippingRequest): Promise<Order> {
+  await mockDelay();
+  const index = orders.findIndex((o) => o.id === data.id);
+  if (index === -1) {
+    throw new Error('订单不存在');
+  }
+  const now = new Date().toISOString();
+  const original = orders[index];
+  // Map target status to a timeline event key
+  const timelineKey: 'shipping' | 'completed' | 'cancelled' | 'pending_ship' =
+    data.status === 'shipping'
+      ? 'shipping'
+      : data.status === 'completed'
+        ? 'completed'
+        : data.status === 'cancelled'
+          ? 'cancelled'
+          : 'pending_ship';
+  const nextHistory = [
+    ...(original.statusHistory ?? []),
+    { key: timelineKey, occurredAt: now, description: data.shippingNote || undefined },
+  ];
+  const updated: Order = {
+    ...original,
+    status: data.status,
+    expressCompany: data.expressCompany ?? original.expressCompany ?? null,
+    trackingNumber: data.trackingNumber ?? original.trackingNumber ?? null,
+    shippingNote: data.shippingNote ?? original.shippingNote ?? null,
+    statusHistory: nextHistory,
+    updatedAt: now,
+  };
+  orders = orders.map((o) => (o.id === data.id ? updated : o));
+  return updated;
+}
+
 // ============ Points Service ============
 
 export async function mockGetPointsBalance(): Promise<PointsBalance> {
@@ -465,6 +530,24 @@ export async function mockGetTransactions(params: ListTransactionParams): Promis
   return paginate(filtered, params.page, params.size);
 }
 
+export async function mockGetUserTransactions(
+  userId: number,
+  params: ListTransactionParams,
+): Promise<PageResult<PointsTransaction>> {
+  await mockDelay();
+  let filtered = pointsTransactions.filter((t) => t.userId === userId);
+  if (params.type) {
+    filtered = filtered.filter((t) => t.type === params.type);
+  }
+  filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return paginate(filtered, params.page, params.size);
+}
+
+export async function mockGetUserAccount(userId: number): Promise<PointsAccount | null> {
+  await mockDelay();
+  return pointsAccounts.find((a) => a.userId === userId) || null;
+}
+
 export async function mockGrantPoints(data: GrantPointsRequest): Promise<void> {
   await mockDelay();
   const account = pointsAccounts.find((a) => a.userId === data.userId);
@@ -484,7 +567,7 @@ export async function mockGrantPoints(data: GrantPointsRequest): Promise<void> {
     points: data.points,
     balanceAfter: newBalance,
     referenceType: 'admin',
-    referenceId: null,
+    referenceId: data.reason || null,
     description: data.description,
     createdAt: new Date().toISOString(),
   };
@@ -513,7 +596,7 @@ export async function mockDeductPoints(data: DeductPointsRequest): Promise<void>
     points: -data.points,
     balanceAfter: newBalance,
     referenceType: 'admin',
-    referenceId: null,
+    referenceId: data.reason || null,
     description: data.description,
     createdAt: new Date().toISOString(),
   };

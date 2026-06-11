@@ -86,6 +86,14 @@ export default function RedemptionSuccess() {
               {order.productName}
             </Typography>
           </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
+              {t('redeem.recipient')}
+            </Typography>
+            <Typography sx={{ fontSize: 13, fontWeight: 600 }}>
+              {order.recipientName}
+            </Typography>
+          </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
               {t('redeem.pointsDeducted')}
@@ -97,22 +105,30 @@ export default function RedemptionSuccess() {
               </Typography>
             </Box>
           </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
+              {t('redeem.estDelivery')}
+            </Typography>
+            <Typography sx={{ fontSize: 13, fontWeight: 600, color: 'success.main' }}>
+              {t('redeem.estDeliveryValue')}
+            </Typography>
+          </Box>
         </Box>
 
-        <Box sx={{ display: 'flex', gap: 2, mt: 2, width: '100%' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 2, width: '100%' }}>
           <Button
-            variant="outlined"
+            variant="contained"
             fullWidth
             onClick={() => navigate(`/orders/${order.id}`)}
-            sx={{ borderRadius: '8px', textTransform: 'none', fontWeight: 600 }}
+            sx={{ borderRadius: '8px', textTransform: 'none', fontWeight: 600, height: 48 }}
           >
             {t('redeem.viewOrder')}
           </Button>
           <Button
-            variant="contained"
+            variant="outlined"
             fullWidth
             onClick={() => navigate('/')}
-            sx={{ borderRadius: '8px', textTransform: 'none', fontWeight: 600 }}
+            sx={{ borderRadius: '8px', textTransform: 'none', fontWeight: 600, height: 48, borderColor: '#E2E8F0', color: 'text.primary' }}
           >
             {t('redeem.continueShopping')}
           </Button>

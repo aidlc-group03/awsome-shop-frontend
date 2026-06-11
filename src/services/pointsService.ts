@@ -11,6 +11,8 @@ import type {
 import {
   mockGetPointsBalance,
   mockGetTransactions,
+  mockGetUserTransactions,
+  mockGetUserAccount,
   mockGrantPoints,
   mockDeductPoints,
   mockGetPointsAccounts,
@@ -32,6 +34,25 @@ export const pointsService = {
       return mockGetTransactions(params);
     }
     return request.get('/points/transactions', { params }) as Promise<PageResult<PointsTransaction>>;
+  },
+
+  async getUserTransactions(
+    userId: number,
+    params: ListTransactionParams,
+  ): Promise<PageResult<PointsTransaction>> {
+    if (isMock()) {
+      return mockGetUserTransactions(userId, params);
+    }
+    return request.get(`/points/users/${userId}/transactions`, { params }) as Promise<
+      PageResult<PointsTransaction>
+    >;
+  },
+
+  async getUserAccount(userId: number): Promise<PointsAccount | null> {
+    if (isMock()) {
+      return mockGetUserAccount(userId);
+    }
+    return request.get(`/points/users/${userId}/account`) as Promise<PointsAccount | null>;
   },
 
   async grant(data: GrantPointsRequest): Promise<void> {

@@ -14,8 +14,10 @@ import Dashboard from '../pages/Dashboard';
 import ProductManage from '../pages/admin/ProductManage';
 import CategoryManage from '../pages/admin/CategoryManage';
 import OrderManage from '../pages/admin/OrderManage';
+import AdminOrderDetail from '../pages/admin/OrderDetail';
 import PointsManage from '../pages/admin/PointsManage';
 import UserManage from '../pages/admin/UserManage';
+import UserPointsHistory from '../pages/admin/UserPointsHistory';
 import AuthGuard from './AuthGuard';
 
 const router = createBrowserRouter([
@@ -54,8 +56,10 @@ const router = createBrowserRouter([
       { path: 'products', element: <ProductManage /> },
       { path: 'categories', element: <CategoryManage /> },
       { path: 'orders', element: <OrderManage /> },
+      { path: 'orders/:id', element: <AdminOrderDetail /> },
       { path: 'points', element: <PointsManage /> },
       { path: 'users', element: <UserManage /> },
+      { path: 'users/:id/points', element: <UserPointsHistory /> },
     ],
   },
   {

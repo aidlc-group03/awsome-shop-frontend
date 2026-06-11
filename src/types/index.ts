@@ -9,6 +9,8 @@ export interface UserInfo {
   role: UserRole;
   avatarUrl: string | null;
   status: number;
+  empNo: string | null;
+  department: string | null;
   createdAt: string;
 }
 
@@ -28,6 +30,8 @@ export interface CreateUserRequest {
   displayName: string;
   email?: string;
   role: UserRole;
+  empNo?: string;
+  department?: string;
 }
 
 export interface ListUserParams {
@@ -115,6 +119,20 @@ export interface UpdateCategoryRequest {
 // Order related types
 export type OrderStatus = 'pending' | 'confirmed' | 'shipping' | 'completed' | 'cancelled';
 
+export type OrderTimelineKey =
+  | 'submitted'
+  | 'confirmed'
+  | 'pending_ship'
+  | 'shipping'
+  | 'completed'
+  | 'cancelled';
+
+export interface OrderTimelineEvent {
+  key: OrderTimelineKey;
+  occurredAt: string;
+  description?: string;
+}
+
 export interface Order {
   id: number;
   orderNo: string;
@@ -129,6 +147,18 @@ export interface Order {
   recipientAddress: string;
   createdAt: string;
   updatedAt: string;
+  // Optional enriched fields for admin detail view
+  productSku?: string | null;
+  productCategory?: string | null;
+  productSpec?: string | null;
+  productImageColor?: string | null; // tailwind-like hex for icon background
+  shippingPoints?: number; // freight points (usually 0)
+  expressCompany?: string | null;
+  trackingNumber?: string | null;
+  shippingNote?: string | null;
+  orderSource?: string | null;
+  orderNote?: string | null;
+  statusHistory?: OrderTimelineEvent[];
 }
 
 export interface CreateOrderRequest {
@@ -143,11 +173,20 @@ export interface ListOrderParams {
   size: number;
   status?: string;
   keyword?: string;
+  days?: number; // optional date range filter (last N days)
 }
 
 export interface UpdateOrderStatusRequest {
   id: number;
   status: OrderStatus;
+}
+
+export interface UpdateShippingRequest {
+  id: number;
+  status: OrderStatus; // 'shipping' | 'completed'
+  expressCompany?: string;
+  trackingNumber?: string;
+  shippingNote?: string;
 }
 
 // Points related types
@@ -177,21 +216,26 @@ export interface PointsAccount {
   userId: number;
   username: string;
   displayName: string;
+  empNo: string | null;
+  department: string | null;
   balance: number;
   totalEarned: number;
   totalSpent: number;
+  redeemCount: number;
 }
 
 export interface GrantPointsRequest {
   userId: number;
   points: number;
   description: string;
+  reason?: string;
 }
 
 export interface DeductPointsRequest {
   userId: number;
   points: number;
   description: string;
+  reason?: string;
 }
 
 export interface ListTransactionParams {

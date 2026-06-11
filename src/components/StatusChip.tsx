@@ -1,4 +1,5 @@
 import Chip from '@mui/material/Chip';
+import { useTranslation } from 'react-i18next';
 import type { OrderStatus, TransactionType } from '../types';
 
 interface StatusChipProps {
@@ -14,6 +15,14 @@ const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
   cancelled: '#9E9E9E',
 };
 
+const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
+  pending: 'orders.status_pending',
+  confirmed: 'orders.status_confirmed',
+  shipping: 'orders.status_shipping',
+  completed: 'orders.status_completed',
+  cancelled: 'orders.statusCancelled',
+};
+
 const TRANSACTION_TYPE_COLORS: Record<TransactionType, string> = {
   earn: '#16A34A',
   admin_add: '#16A34A',
@@ -22,27 +31,29 @@ const TRANSACTION_TYPE_COLORS: Record<TransactionType, string> = {
   refund: '#2563EB',
 };
 
-const TRANSACTION_TYPE_PREFIX: Record<TransactionType, string> = {
-  earn: '+',
-  admin_add: '+',
-  spend: '-',
-  admin_deduct: '-',
-  refund: '+',
+const TRANSACTION_TYPE_LABELS: Record<TransactionType, string> = {
+  earn: 'points.filterEarn',
+  admin_add: 'points.filterAdminAdd',
+  spend: 'points.filterSpend',
+  admin_deduct: 'points.filterAdminDeduct',
+  refund: 'points.filterRefund',
 };
 
 export default function StatusChip({ status, type }: StatusChipProps) {
+  const { t } = useTranslation();
+
   if (type === 'order') {
-    const color = ORDER_STATUS_COLORS[status as OrderStatus];
+    const orderStatus = status as OrderStatus;
+    const color = ORDER_STATUS_COLORS[orderStatus];
     return (
       <Chip
-        label={status}
+        label={t(ORDER_STATUS_LABELS[orderStatus])}
         size="small"
         sx={{
           bgcolor: `${color}14`,
           color,
           fontWeight: 600,
           fontSize: 12,
-          textTransform: 'capitalize',
         }}
       />
     );
@@ -50,11 +61,10 @@ export default function StatusChip({ status, type }: StatusChipProps) {
 
   const txType = status as TransactionType;
   const color = TRANSACTION_TYPE_COLORS[txType];
-  const prefix = TRANSACTION_TYPE_PREFIX[txType];
 
   return (
     <Chip
-      label={`${prefix} ${status}`}
+      label={t(TRANSACTION_TYPE_LABELS[txType])}
       size="small"
       sx={{
         bgcolor: `${color}14`,

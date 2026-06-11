@@ -1,20 +1,13 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TablePagination from '@mui/material/TablePagination';
+import Pagination from '@mui/material/Pagination';
 import Paper from '@mui/material/Paper';
-import Chip from '@mui/material/Chip';
 import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -23,6 +16,7 @@ import Alert from '@mui/material/Alert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import type { Product, Category, CreateProductRequest, UpdateProductRequest } from '../../../types';
 import { productService } from '../../../services/productService';
 import { categoryService } from '../../../services/categoryService';
@@ -30,6 +24,16 @@ import PageHeader from '../../../components/PageHeader';
 import ConfirmDialog from '../../../components/ConfirmDialog';
 import LoadingState from '../../../components/LoadingState';
 import EmptyState from '../../../components/EmptyState';
+
+const CATEGORY_COLORS: Record<string, { bg: string; fg: string }> = {
+  数码电子: { bg: '#DBEAFE', fg: '#2563EB' },
+  生活家居: { bg: '#FEF3C7', fg: '#D97706' },
+  美食餐饮: { bg: '#DCFCE7', fg: '#16A34A' },
+  礼品卡券: { bg: '#DCFCE7', fg: '#16A34A' },
+  办公用品: { bg: '#EDE9FE', fg: '#7C3AED' },
+  运动户外: { bg: '#FCE7F3', fg: '#DB2777' },
+  _default: { bg: '#DBEAFE', fg: '#2563EB' },
+};
 
 interface ProductFormData {
   name: string;
@@ -60,7 +64,7 @@ export default function ProductManage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const rowsPerPage = 12;
   const [total, setTotal] = useState(0);
   const [searchName, setSearchName] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -130,24 +134,7 @@ export default function ProductManage() {
     fetchProducts();
   };
 
-  const handlePageChange = (_: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
   // Selection
-  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      setSelected(products.map((p) => p.id));
-    } else {
-      setSelected([]);
-    }
-  };
-
   const handleSelectOne = (id: number) => {
     setSelected((prev) =>
       prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
@@ -324,14 +311,14 @@ export default function ProductManage() {
       />
 
       {/* Search and Filter */}
-      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
         <TextField
           size="small"
           placeholder={t('adminProducts.searchPlaceholder')}
           value={searchName}
           onChange={(e) => setSearchName(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-          sx={{ width: 260 }}
+          sx={{ width: 280 }}
         />
         <TextField
           select
@@ -349,6 +336,9 @@ export default function ProductManage() {
         <Button variant="outlined" onClick={handleSearch}>
           {t('adminProducts.search')}
         </Button>
+        <Typography sx={{ fontSize: 13, color: 'text.secondary', ml: 1 }}>
+          {t('adminProducts.totalCount', { count: total })}
+        </Typography>
         {selected.length > 0 && (
           <Box sx={{ display: 'flex', gap: 1, ml: 'auto' }}>
             <Button size="small" variant="outlined" color="success" onClick={() => handleBatchStatusClick(1)}>
@@ -361,85 +351,140 @@ export default function ProductManage() {
         )}
       </Box>
 
-      {/* Table */}
+      {/* Card Grid */}
       {loading ? (
-        <LoadingState type="table" rows={5} />
+        <LoadingState type="card" />
       ) : products.length === 0 ? (
         <EmptyState message={t('adminProducts.empty')} />
       ) : (
-        <Paper elevation={0} sx={{ border: '1px solid', borderColor: '#F1F5F9', borderRadius: 2 }}>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow sx={{ bgcolor: '#F8FAFC' }}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      indeterminate={selected.length > 0 && selected.length < products.length}
-                      checked={products.length > 0 && selected.length === products.length}
-                      onChange={handleSelectAll}
-                    />
-                  </TableCell>
-                  <TableCell>{t('adminProducts.col.name')}</TableCell>
-                  <TableCell>{t('adminProducts.col.sku')}</TableCell>
-                  <TableCell>{t('adminProducts.col.category')}</TableCell>
-                  <TableCell>{t('adminProducts.col.pointsPrice')}</TableCell>
-                  <TableCell>{t('adminProducts.col.stock')}</TableCell>
-                  <TableCell>{t('adminProducts.col.status')}</TableCell>
-                  <TableCell>{t('adminProducts.col.actions')}</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {products.map((product) => (
-                  <TableRow key={product.id} hover>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={selected.includes(product.id)}
-                        onChange={() => handleSelectOne(product.id)}
-                      />
-                    </TableCell>
-                    <TableCell>{product.name}</TableCell>
-                    <TableCell>{product.sku}</TableCell>
-                    <TableCell>{product.category}</TableCell>
-                    <TableCell>{product.pointsPrice.toLocaleString()}</TableCell>
-                    <TableCell sx={{ color: product.stock < 10 ? '#DC2626' : 'inherit', fontWeight: product.stock < 10 ? 600 : 400 }}>
-                      {product.stock}
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={product.status === 1 ? t('adminProducts.statusActive') : t('adminProducts.statusInactive')}
-                        size="small"
-                        color={product.status === 1 ? 'success' : 'default'}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <IconButton size="small" onClick={() => openEditDialog(product)} title={t('adminProducts.edit')}>
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                      <IconButton size="small" onClick={() => handleDeleteClick(product.id)} title={t('adminProducts.delete')}>
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                      <Button
-                        size="small"
+        <>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+            {products.map((product) => {
+              const palette = CATEGORY_COLORS[product.category] || CATEGORY_COLORS._default;
+              const isSelected = selected.includes(product.id);
+              return (
+                <Paper
+                  key={product.id}
+                  elevation={0}
+                  sx={{
+                    borderRadius: 'var(--radius-lg, 12px)',
+                    border: '1px solid',
+                    borderColor: isSelected ? 'primary.main' : '#F1F5F9',
+                    overflow: 'hidden',
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  {/* Selection checkbox */}
+                  <Checkbox
+                    size="small"
+                    checked={isSelected}
+                    onChange={() => handleSelectOne(product.id)}
+                    sx={{
+                      position: 'absolute',
+                      top: 4,
+                      left: 4,
+                      zIndex: 1,
+                      bgcolor: 'rgba(255,255,255,0.8)',
+                      borderRadius: 1,
+                      p: 0.5,
+                    }}
+                  />
+                  {/* Image */}
+                  <Box
+                    sx={{
+                      height: 140,
+                      bgcolor: palette.bg,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {product.imageUrl ? (
+                      <Box component="img" src={product.imageUrl} alt={product.name} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ) : (
+                      <ShoppingBagIcon sx={{ fontSize: 48, color: palette.fg }} />
+                    )}
+                  </Box>
+                  {/* Body */}
+                  <Box sx={{ p: '16px 16px 12px', display: 'flex', flexDirection: 'column', gap: 1.25, flex: 1 }}>
+                    <Typography
+                      sx={{ fontSize: 14, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                    >
+                      {product.name}
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box sx={{ bgcolor: '#EFF6FF', borderRadius: '10px', px: 1, py: 0.25 }}>
+                        <Typography sx={{ fontSize: 11, fontWeight: 500, color: '#2563EB' }}>{product.category}</Typography>
+                      </Box>
+                      <Box
                         onClick={() => handleToggleStatus(product.id, product.status)}
+                        sx={{
+                          cursor: 'pointer',
+                          bgcolor: product.status === 1 ? '#DCFCE7' : '#FEE2E2',
+                          borderRadius: '10px',
+                          px: 1,
+                          py: 0.25,
+                        }}
                       >
-                        {product.status === 1 ? t('adminProducts.deactivate') : t('adminProducts.activate')}
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            component="div"
-            count={total}
-            page={page}
-            onPageChange={handlePageChange}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleRowsPerPageChange}
-            rowsPerPageOptions={[5, 10, 25]}
-          />
-        </Paper>
+                        <Typography sx={{ fontSize: 11, fontWeight: 500, color: product.status === 1 ? '#166534' : '#991B1B' }}>
+                          {product.status === 1 ? t('adminProducts.statusActiveBadge') : t('adminProducts.statusInactiveBadge')}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Typography sx={{ fontSize: 15, fontWeight: 700, color: '#D97706' }}>
+                        {product.pointsPrice.toLocaleString()} {t('points.pointsUnit')}
+                      </Typography>
+                      <Typography sx={{ fontSize: 12, color: product.stock < 10 ? 'error.main' : 'text.secondary', fontWeight: product.stock < 10 ? 600 : 400 }}>
+                        {t('adminProducts.stockLabel', { count: product.stock })}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  {/* Actions */}
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 0.5, p: '0 12px 12px' }}>
+                    <Button
+                      size="small"
+                      startIcon={<EditIcon sx={{ fontSize: 16 }} />}
+                      onClick={() => openEditDialog(product)}
+                      sx={{ minWidth: 'auto', color: 'text.secondary', textTransform: 'none', fontSize: 12 }}
+                    >
+                      {t('adminProducts.edit')}
+                    </Button>
+                    <Button
+                      size="small"
+                      startIcon={<DeleteIcon sx={{ fontSize: 16 }} />}
+                      onClick={() => handleDeleteClick(product.id)}
+                      sx={{ minWidth: 'auto', color: 'error.main', textTransform: 'none', fontSize: 12 }}
+                    >
+                      {t('adminProducts.delete')}
+                    </Button>
+                  </Box>
+                </Paper>
+              );
+            })}
+          </Box>
+
+          {/* Pager */}
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', py: 1 }}>
+            <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
+              {t('adminProducts.showingRange', {
+                from: total === 0 ? 0 : page * rowsPerPage + 1,
+                to: Math.min((page + 1) * rowsPerPage, total),
+                total,
+              })}
+            </Typography>
+            <Pagination
+              count={Math.max(1, Math.ceil(total / rowsPerPage))}
+              page={page + 1}
+              onChange={(_, value) => setPage(value - 1)}
+              color="primary"
+              shape="rounded"
+            />
+          </Box>
+        </>
       )}
 
       {/* Create/Edit Dialog */}

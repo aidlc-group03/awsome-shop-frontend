@@ -10,6 +10,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Chip from '@mui/material/Chip';
+import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -19,8 +21,10 @@ import Alert from '@mui/material/Alert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import CategoryIcon from '@mui/icons-material/Category';
 import type { Category, CreateCategoryRequest, UpdateCategoryRequest } from '../../../types';
 import { categoryService } from '../../../services/categoryService';
+import { productService } from '../../../services/productService';
 import PageHeader from '../../../components/PageHeader';
 import ConfirmDialog from '../../../components/ConfirmDialog';
 import LoadingState from '../../../components/LoadingState';
@@ -42,6 +46,8 @@ export default function CategoryManage() {
   const { t } = useTranslation();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [keyword, setKeyword] = useState('');
+  const [productCounts, setProductCounts] = useState<Record<string, number>>({});
 
   // Dialog states
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -70,6 +76,23 @@ export default function CategoryManage() {
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
+
+  useEffect(() => {
+    productService
+      .getList({ page: 1, size: 999 })
+      .then((res) => {
+        const counts: Record<string, number> = {};
+        res.records.forEach((p) => {
+          counts[p.category] = (counts[p.category] || 0) + 1;
+        });
+        setProductCounts(counts);
+      })
+      .catch(() => {});
+  }, []);
+
+  const filteredCategories = categories.filter((c) =>
+    keyword ? c.name.toLowerCase().includes(keyword.toLowerCase()) : true,
+  );
 
   // Create/Edit Dialog
   const openCreateDialog = () => {
@@ -167,10 +190,24 @@ export default function CategoryManage() {
         }
       />
 
+      {/* Toolbar */}
+      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+        <TextField
+          size="small"
+          placeholder={t('adminCategories.searchPlaceholder')}
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          sx={{ width: 280 }}
+        />
+        <Typography sx={{ fontSize: 13, color: 'text.secondary', ml: 'auto' }}>
+          {t('adminCategories.totalCount', { count: categories.length })}
+        </Typography>
+      </Box>
+
       {/* Table */}
       {loading ? (
         <LoadingState type="table" rows={5} />
-      ) : categories.length === 0 ? (
+      ) : filteredCategories.length === 0 ? (
         <EmptyState message={t('adminCategories.empty')} />
       ) : (
         <Paper elevation={0} sx={{ border: '1px solid', borderColor: '#F1F5F9', borderRadius: 2 }}>
@@ -179,19 +216,30 @@ export default function CategoryManage() {
               <TableHead>
                 <TableRow sx={{ bgcolor: '#F8FAFC' }}>
                   <TableCell>{t('adminCategories.col.name')}</TableCell>
-                  <TableCell>{t('adminCategories.col.iconUrl')}</TableCell>
-                  <TableCell>{t('adminCategories.col.sortOrder')}</TableCell>
-                  <TableCell>{t('adminCategories.col.actions')}</TableCell>
+                  <TableCell sx={{ width: 110 }}>{t('adminCategories.col.productCount')}</TableCell>
+                  <TableCell sx={{ width: 110 }}>{t('adminCategories.col.sortOrder')}</TableCell>
+                  <TableCell sx={{ width: 90 }}>{t('adminCategories.col.status')}</TableCell>
+                  <TableCell sx={{ width: 130 }}>{t('adminCategories.col.actions')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {categories.map((category) => (
+                {filteredCategories.map((category) => (
                   <TableRow key={category.id} hover>
-                    <TableCell>{category.name}</TableCell>
-                    <TableCell sx={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {category.iconUrl || '-'}
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <CategoryIcon sx={{ fontSize: 20, color: 'primary.main' }} />
+                        <Typography sx={{ fontSize: 14 }}>{category.name}</Typography>
+                      </Box>
                     </TableCell>
+                    <TableCell>{productCounts[category.name] ?? 0}</TableCell>
                     <TableCell>{category.sortOrder}</TableCell>
+                    <TableCell>
+                      <Chip
+                        label={category.status === 1 ? t('adminCategories.statusActive') : t('adminCategories.statusInactive')}
+                        size="small"
+                        color={category.status === 1 ? 'success' : 'default'}
+                      />
+                    </TableCell>
                     <TableCell>
                       <IconButton size="small" onClick={() => openEditDialog(category)} title={t('adminCategories.edit')}>
                         <EditIcon fontSize="small" />
