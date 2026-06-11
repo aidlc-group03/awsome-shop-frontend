@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -61,6 +62,7 @@ const INITIAL_FORM: ProductFormData = {
 
 export default function ProductManage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
@@ -150,20 +152,11 @@ export default function ProductManage() {
   };
 
   const openEditDialog = (product: Product) => {
-    setEditingProduct(product);
-    setFormData({
-      name: product.name,
-      sku: product.sku,
-      category: product.category,
-      pointsPrice: String(product.pointsPrice),
-      marketPrice: product.marketPrice != null ? String(product.marketPrice) : '',
-      stock: String(product.stock),
-      status: product.status,
-      description: product.description || '',
-      imageUrl: product.imageUrl || '',
-    });
-    setFormError('');
-    setDialogOpen(true);
+    navigate(`/admin/products/${product.id}/edit`);
+  };
+
+  const goToDetail = (id: number) => {
+    navigate(`/admin/products/${id}`);
   };
 
   const handleFormChange = (field: keyof ProductFormData, value: string | number) => {
@@ -393,6 +386,7 @@ export default function ProductManage() {
                   />
                   {/* Image */}
                   <Box
+                    onClick={() => goToDetail(product.id)}
                     sx={{
                       height: 140,
                       bgcolor: palette.bg,
@@ -400,6 +394,7 @@ export default function ProductManage() {
                       alignItems: 'center',
                       justifyContent: 'center',
                       overflow: 'hidden',
+                      cursor: 'pointer',
                     }}
                   >
                     {product.imageUrl ? (
@@ -411,7 +406,8 @@ export default function ProductManage() {
                   {/* Body */}
                   <Box sx={{ p: '16px 16px 12px', display: 'flex', flexDirection: 'column', gap: 1.25, flex: 1 }}>
                     <Typography
-                      sx={{ fontSize: 14, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                      onClick={() => goToDetail(product.id)}
+                      sx={{ fontSize: 14, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', cursor: 'pointer', '&:hover': { color: 'primary.main' } }}
                     >
                       {product.name}
                     </Typography>

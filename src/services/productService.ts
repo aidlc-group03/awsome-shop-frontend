@@ -3,6 +3,7 @@ import type {
   CreateProductRequest,
   UpdateProductRequest,
   ListProductParams,
+  AdjustStockRequest,
   PageResult,
 } from '../types';
 import {
@@ -13,6 +14,7 @@ import {
   mockDeleteProduct,
   mockUpdateProductStatus,
   mockBatchUpdateProductStatus,
+  mockAdjustProductStock,
 } from '../mock';
 import request from './request';
 
@@ -66,5 +68,16 @@ export const productService = {
       return mockBatchUpdateProductStatus(ids, status);
     }
     return request.patch('/products/batch-status', { ids, status }) as Promise<void>;
+  },
+
+  async adjustStock(data: AdjustStockRequest): Promise<Product> {
+    if (isMock()) {
+      return mockAdjustProductStock(data);
+    }
+    return request.patch(`/products/${data.id}/stock`, {
+      type: data.type,
+      quantity: data.quantity,
+      reason: data.reason,
+    }) as Promise<Product>;
   },
 };
